@@ -1742,6 +1742,7 @@
 
     /* ═══════════════════════════════════════
        SECTION 4: AUTHENTICATION DETECTION
+       (Enhanced with redirect fallback & full error handling)
     ═══════════════════════════════════════ */
     const googleProvider = new firebase.auth.GoogleAuthProvider();
 
@@ -1750,14 +1751,32 @@
         currentUser = user;
         if (user) {
             console.log('User logged in:', user.displayName, user.uid);
-            // Ensure user document exists in Firestore (coin system preparation)
             await ensureUserDocument(user);
         } else {
             console.log('User not logged in');
         }
     });
 
-    // Google Sign-In function
+    // Handle redirect result (fallback for mobile browsers where popup fails)
+    auth.getRedirectResult().then((result) => {
+        if (result && result.user) {
+            currentUser = result.user;
+            showToast(`مرحباً ${currentUser.displayName}!`, 'success');
+            closeLoginPopup();
+        }
+    }).catch((error) => {
+        if (error.code && error.code !== 'auth/popup-closed-by-user') {
+            console.error('Redirect result error:', error.code, error.message);
+            if (error.code === 'auth/unauthorized-domain') {
+                console.error(
+                    '⚠️ DOMAIN NOT AUTHORIZED! Add "' + window.location.hostname +
+                    '" to Firebase Console → Authentication → Settings → Authorized domains'
+                );
+            }
+        }
+    });
+
+    // Google Sign-In function with full error handling & redirect fallback
     async function signInWithGoogle() {
         try {
             const result = await auth.signInWithPopup(googleProvider);
@@ -1766,14 +1785,46 @@
             closeLoginPopup();
             return true;
         } catch (error) {
-            console.error('Sign-in error:', error);
+            console.error('Sign-in error:', error.code, error.message);
+
+            // === Popup blocked or failed → fallback to redirect ===
+            if (error.code === 'auth/popup-blocked' ||
+                error.code === 'auth/cancelled-popup-request' ||
+                error.code === 'auth/internal-error') {
+                showToast('جاري تحويلك لتسجيل الدخول...', 'info');
+                try {
+                    await auth.signInWithRedirect(googleProvider);
+                } catch (redirectError) {
+                    console.error('Redirect error:', redirectError);
+                    showToast('حدث خطأ أثناء تسجيل الدخول', 'error');
+                }
+                return false;
+            }
+
+            // === Domain not whitelisted in Firebase ===
+            if (error.code === 'auth/unauthorized-domain') {
+                showToast('هذا النطاق غير مصرح له بتسجيل الدخول. تواصل مع المسؤول.', 'error');
+                console.error(
+                    '⚠️ FIX: Go to Firebase Console → Authentication → Settings → Authorized domains\n' +
+                    '   Add this domain: ' + window.location.hostname
+                );
+                return false;
+            }
+
+            // === User closed the popup ===
             if (error.code === 'auth/popup-closed-by-user') {
                 showToast('تم إلغاء تسجيل الدخول', 'warning');
-            } else if (error.code === 'auth/popup-blocked') {
-                showToast('المتصفح منع النافذة المنبثقة. يرجى السماح بها.', 'error');
-            } else {
-                showToast('حدث خطأ أثناء تسجيل الدخول', 'error');
+                return false;
             }
+
+            // === Network error ===
+            if (error.code === 'auth/network-request-failed') {
+                showToast('خطأ في الاتصال بالإنترنت', 'error');
+                return false;
+            }
+
+            // === Any other error ===
+            showToast('حدث خطأ أثناء تسجيل الدخول', 'error');
             return false;
         }
     }
