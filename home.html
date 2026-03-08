@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقع الكروت المجانية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap');
+
+    :root {
+        --vodafone-color: #e11;
+        --etisalat-color: #1b7340;
+        --orange-color: #ff7900;
+        --we-color: #6b21a8;
+        --bg-primary: #0f172a;
+        --bg-secondary: #1e293b;
+        --glass-bg: rgba(255, 255, 255, 0.06);
+        --glass-border: rgba(255, 255, 255, 0.08);
+        --glass-hover: rgba(255, 255, 255, 0.12);
+        --text-primary: #ffffff;
+        --text-secondary: rgba(255, 255, 255, 0.7);
+        --success-color: #22c55e;
+        --danger-color: #ef4444;
+        --info-color: #3b82f6;
+        --gold-color: #fbbf24;
+        --header-height: 70px;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Tajawal', sans-serif;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+        opacity: 0;
+        transition: opacity 0.8s ease;
+    }
+
+    body.loaded {
+        opacity: 1;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
+
+    button, .provider-card, a {
+        -webkit-tap-highlight-color: transparent;
+        outline: none;
+        user-select: none;
+    }
+    button:focus-visible, .provider-card:focus-visible {
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+    }
+
+    .background-shapes {
+        position: fixed; top: 0; left: 0;
+        width: 100%; height: 100%;
+        overflow: hidden; z-index: 0; pointer-events: none;
+    }
+
+    .shape {
+        position: absolute; border-radius: 50%;
+        filter: blur(100px); opacity: 0.12;
+        animation: floatShape 25s ease-in-out infinite;
+    }
+
+    .shape-1 { background: var(--vodafone-color); width: 400px; height: 400px; top: -200px; right: -200px; animation-delay: 0s; }
+    .shape-2 { background: var(--etisalat-color); width: 500px; height: 500px; bottom: -250px; left: -250px; animation-delay: -8s; }
+    .shape-3 { background: var(--orange-color); width: 300px; height: 300px; top: 40%; left: 60%; animation-delay: -16s; }
+    .shape-4 { background: var(--we-color); width: 350px; height: 350px; top: 60%; right: 70%; animation-delay: -12s; }
+
+    @keyframes floatShape {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        25% { transform: translate(60px, -40px) scale(1.1); }
+        50% { transform: translate(-30px, 80px) scale(0.95); }
+        75% { transform: translate(-60px, -20px) scale(1.05); }
+    }
+
+    .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+
+    .star {
+        position: absolute; background: #fff; border-radius: 50%;
+        animation: twinkle var(--duration) ease-in-out infinite;
+        animation-delay: var(--delay);
+    }
+    .star.small { width: 1px; height: 1px; }
+    .star.medium { width: 2px; height: 2px; }
+    .star.large { width: 3px; height: 3px; }
+
+    @keyframes twinkle {
+        0%, 100% { opacity: var(--opacity); transform: scale(1); }
+        50% { opacity: 0.1; transform: scale(0.5); }
+    }
+
+    #particleCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+
+    .header {
+        position: fixed; top: 0; right: 0; left: 0;
+        height: var(--header-height); padding: 0 1.5rem;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--glass-border);
+        display: flex; justify-content: space-between; align-items: center;
+        z-index: 100; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .header.scrolled { background: rgba(15, 23, 42, 0.95); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
+
+    .header-right { display: flex; align-items: center; gap: 0.5rem; }
+
+    .header-center { position: absolute; right: 50%; transform: translateX(50%); display: flex; align-items: center; }
+
+    .header-logo { width: 45px; height: 45px; opacity: 1; transform: translateY(0) scale(1); transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+    .header-logo img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.25)); }
+
+    .header-left { display: flex; align-items: center; gap: 0.3rem; }
+
+    .header-btn {
+        position: relative; color: var(--text-secondary); font-size: 1.2rem;
+        cursor: pointer; padding: 0.6rem; border-radius: 12px;
+        border: none; background: transparent; transition: all 0.3s ease;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .header-btn:hover { color: var(--text-primary); background: var(--glass-bg); }
+    .header-btn .badge {
+        position: absolute; top: 4px; right: 4px;
+        width: 8px; height: 8px; background: var(--danger-color);
+        border-radius: 50%; border: 2px solid var(--bg-primary);
+    }
+
+    .currency-info {
+        display: flex; align-items: center; gap: 0.6rem;
+        background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(251, 191, 36, 0.05));
+        border: 1px solid rgba(251, 191, 36, 0.15);
+        padding: 0.45rem 1rem; border-radius: 50px;
+        cursor: pointer; transition: all 0.3s ease; direction: ltr;
+    }
+    .currency-info:hover {
+        background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(251, 191, 36, 0.08));
+        border-color: rgba(251, 191, 36, 0.3); transform: scale(1.03);
+    }
+    .currency-info:active { transform: scale(0.98); }
+
+    .currency-wrapper { display: flex; align-items: center; gap: 0.4rem; }
+    .currency-icon { width: 24px; height: 24px; object-fit: contain; filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.4)); }
+    .currency-amount { color: var(--gold-color); font-weight: 700; font-size: 1rem; letter-spacing: 0.5px; }
+
+    .add-currency {
+        width: 22px; height: 22px;
+        background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3);
+        border-radius: 50%; color: var(--success-color);
+        font-size: 0.85rem; font-weight: bold; cursor: pointer;
+        transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; line-height: 1;
+    }
+    .add-currency:hover { background: rgba(34, 197, 94, 0.25); transform: rotate(90deg); }
+
+    .menu-container { position: relative; }
+
+    .menu-dropdown {
+        position: absolute; top: calc(100% + 8px); left: 0;
+        background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border); border-radius: 16px;
+        padding: 0.5rem; min-width: 200px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        opacity: 0; visibility: hidden; transform: translateY(-10px) scale(0.95);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 200;
+    }
+    .menu-dropdown.show { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+
+    .menu-item {
+        color: var(--text-secondary); padding: 0.75rem 1rem; border-radius: 10px;
+        cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center;
+        gap: 0.8rem; font-size: 0.95rem; border: none; background: none;
+        width: 100%; text-align: right; font-family: 'Tajawal', sans-serif;
+    }
+    .menu-item:hover { background: var(--glass-hover); color: var(--text-primary); }
+    .menu-item i { width: 20px; text-align: center; }
+    .menu-divider { height: 1px; background: var(--glass-border); margin: 0.3rem 0.5rem; }
+    .menu-item.logout { color: var(--danger-color); }
+    .menu-item.logout:hover { background: rgba(239, 68, 68, 0.1); }
+
+    .content {
+        width: 100%; max-width: 1200px; min-height: 100vh;
+        margin: 0 auto; display: flex; flex-direction: column; align-items: center;
+        padding: calc(var(--header-height) + 2rem) 2rem 6rem;
+        position: relative; z-index: 1;
+    }
+
+    .hero-section { text-align: center; margin-bottom: 3rem; animation: fadeInUp 0.8s ease-out; }
+    .hero-title {
+        color: var(--text-primary); font-size: 2rem; font-weight: 900; margin-bottom: 0.5rem;
+        background: linear-gradient(135deg, #fff, rgba(255,255,255,0.7));
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-subtitle { color: var(--text-secondary); font-size: 1.1rem; font-weight: 400; line-height: 1.6; }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .quick-stats {
+        display: flex; gap: 1rem; margin-bottom: 3rem;
+        width: 100%; max-width: 600px;
+        animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+    .stat-card {
+        flex: 1; background: var(--glass-bg); border: 1px solid var(--glass-border);
+        border-radius: 16px; padding: 1.2rem; text-align: center; transition: all 0.3s ease;
+    }
+    .stat-card:hover { background: var(--glass-hover); transform: translateY(-3px); }
+    .stat-value { font-size: 1.5rem; font-weight: 900; color: var(--text-primary); margin-bottom: 0.2rem; }
+    .stat-label { font-size: 0.8rem; color: var(--text-secondary); }
+    .stat-card:nth-child(1) .stat-value { color: var(--success-color); }
+    .stat-card:nth-child(2) .stat-value { color: var(--gold-color); }
+    .stat-card:nth-child(3) .stat-value { color: var(--info-color); }
+
+    .section-header {
+        display: flex; align-items: center; justify-content: space-between;
+        width: 100%; margin-bottom: 1.5rem; padding: 0 0.5rem;
+        animation: fadeInUp 0.8s ease-out 0.3s both;
+    }
+    .section-title {
+        color: var(--text-primary); font-size: 1.4rem; font-weight: 700;
+        display: flex; align-items: center; gap: 0.5rem;
+    }
+    .section-title i { color: var(--info-color); font-size: 1.1rem; }
+    .section-badge {
+        background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2);
+        color: var(--success-color); padding: 0.3rem 0.8rem; border-radius: 20px;
+        font-size: 0.8rem; font-weight: 500;
+    }
+
+    .providers-grid {
+        width: 100%; display: grid; grid-template-columns: repeat(2, 1fr);
+        gap: 1.2rem; padding: 0; animation: fadeInUp 0.8s ease-out 0.4s both;
+    }
+
+    .provider-card {
+        background: var(--glass-bg); border: 1px solid var(--glass-border);
+        border-radius: 20px; padding: 2rem 1.5rem;
+        display: flex; flex-direction: column; align-items: center; gap: 1.2rem;
+        cursor: pointer; position: relative; overflow: hidden;
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .provider-card::before {
+        content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+        background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%);
+        opacity: 0; transition: opacity 0.4s ease;
+    }
+    .provider-card::after {
+        content: ''; position: absolute;
+        top: -2px; left: -2px; right: -2px; bottom: -2px;
+        border-radius: 22px;
+        background: linear-gradient(135deg, var(--card-accent), transparent, var(--card-accent));
+        z-index: -1; opacity: 0; transition: opacity 0.4s ease;
+    }
+    .provider-card:hover {
+        transform: translateY(-8px); background: var(--glass-hover);
+        border-color: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 40px var(--card-glow);
+    }
+    .provider-card:hover::before { opacity: 1; }
+    .provider-card:hover::after { opacity: 0.3; }
+    .provider-card:active { transform: translateY(-4px) scale(0.98); }
+    .provider-card.selecting { animation: selectPulse 0.5s ease; }
+
+    /* ===== UNAVAILABLE CARD STYLES ===== */
+    .provider-card.unavailable {
+        opacity: 0.45;
+        cursor: not-allowed;
+        filter: grayscale(0.6);
+    }
+    .provider-card.unavailable:hover {
+        transform: none;
+        background: var(--glass-bg);
+        border-color: var(--glass-border);
+        box-shadow: none;
+    }
+    .provider-card.unavailable:hover::before { opacity: 0; }
+    .provider-card.unavailable:hover::after { opacity: 0; }
+    .provider-card.unavailable:active {
+        transform: none;
+    }
+    .provider-card.unavailable .provider-icon {
+        filter: grayscale(0.7);
+    }
+    .provider-card.unavailable:hover .provider-icon {
+        transform: none;
+        box-shadow: none;
+    }
+    .provider-card.unavailable:hover .provider-icon-ring { opacity: 0; }
+    .provider-card.unavailable:hover .provider-arrow { opacity: 0; }
+
+    .provider-status.status-unavailable {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.15);
+        color: var(--danger-color);
+    }
+    .provider-status.status-unavailable .dot {
+        animation: none;
+        opacity: 0.6;
+    }
+
+    .unavailable-ribbon {
+        position: absolute;
+        top: 12px;
+        left: -30px;
+        background: linear-gradient(135deg, var(--danger-color), #dc2626);
+        color: #fff;
+        font-size: 0.6rem;
+        font-weight: 700;
+        padding: 0.25rem 2rem;
+        transform: rotate(45deg);
+        z-index: 5;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+    }
+
+    @keyframes selectPulse {
+        0% { transform: scale(1); }
+        30% { transform: scale(0.95); }
+        60% { transform: scale(1.02); }
+        100% { transform: scale(1); }
+    }
+
+    .vodafone { --card-accent: var(--vodafone-color); --card-glow: rgba(225, 17, 17, 0.15); }
+    .etisalat { --card-accent: var(--etisalat-color); --card-glow: rgba(27, 115, 64, 0.15); }
+    .orange { --card-accent: var(--orange-color); --card-glow: rgba(255, 121, 0, 0.15); }
+    .we { --card-accent: var(--we-color); --card-glow: rgba(107, 33, 168, 0.15); }
+
+    .provider-icon-wrapper { position: relative; }
+
+    .provider-icon {
+        width: 72px; height: 72px; border-radius: 20px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.8rem; color: white; transition: all 0.4s ease;
+        position: relative; z-index: 1;
+    }
+    .provider-card:hover .provider-icon { transform: scale(1.1) rotate(-5deg); box-shadow: 0 8px 25px var(--card-glow); }
+
+    .provider-icon-ring {
+        position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px;
+        border-radius: 24px; border: 2px solid var(--card-accent);
+        opacity: 0; transition: all 0.4s ease; animation: ringPulse 2s ease-in-out infinite;
+    }
+    .provider-card:hover .provider-icon-ring { opacity: 0.3; }
+
+    @keyframes ringPulse {
+        0%, 100% { transform: scale(1); opacity: 0.3; }
+        50% { transform: scale(1.1); opacity: 0.1; }
+    }
+
+    .vodafone .provider-icon { background: linear-gradient(135deg, #e11, #ff3333); box-shadow: 0 4px 15px rgba(225, 17, 17, 0.3); }
+    .etisalat .provider-icon { background: linear-gradient(135deg, #1b7340, #22a05a); box-shadow: 0 4px 15px rgba(27, 115, 64, 0.3); }
+    .orange .provider-icon { background: linear-gradient(135deg, #ff7900, #ff9a3c); box-shadow: 0 4px 15px rgba(255, 121, 0, 0.3); }
+    .we .provider-icon { background: linear-gradient(135deg, #6b21a8, #8b3fd4); box-shadow: 0 4px 15px rgba(107, 33, 168, 0.3); }
+
+    .provider-info { text-align: center; }
+    .provider-name { color: var(--text-primary); font-size: 1.3rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .provider-desc { color: var(--text-secondary); font-size: 0.8rem; }
+
+    .provider-status {
+        background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.15);
+        color: var(--success-color); padding: 0.35rem 0.8rem; border-radius: 20px;
+        font-size: 0.75rem; font-weight: 500; display: flex; align-items: center; gap: 0.4rem;
+    }
+    .provider-status .dot {
+        width: 6px; height: 6px; background: currentColor;
+        border-radius: 50%; animation: statusPulse 1.5s infinite;
+    }
+
+    @keyframes statusPulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.8); opacity: 0.4; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .provider-arrow {
+        position: absolute; bottom: 1rem; left: 1rem;
+        color: var(--text-secondary); font-size: 0.8rem;
+        opacity: 0; transform: translateX(10px); transition: all 0.3s ease;
+    }
+    .provider-card:hover .provider-arrow { opacity: 0.5; transform: translateX(0); }
+
+    .bottom-nav {
+        position: fixed; bottom: 0; left: 0; right: 0;
+        background: rgba(15, 23, 42, 0.9);
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid var(--glass-border);
+        display: flex; justify-content: space-around; align-items: center;
+        padding: 0.5rem 0; z-index: 100;
+        padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+    }
+
+    .nav-item {
+        display: flex; flex-direction: column; align-items: center; gap: 0.25rem;
+        padding: 0.5rem 1rem; cursor: pointer; color: var(--text-secondary);
+        transition: all 0.3s ease; border-radius: 12px; position: relative;
+        border: none; background: none; font-family: 'Tajawal', sans-serif;
+    }
+    .nav-item:hover, .nav-item.active { color: var(--text-primary); }
+    .nav-item.active::before {
+        content: ''; position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%); width: 20px; height: 3px;
+        background: var(--info-color); border-radius: 0 0 3px 3px;
+    }
+    .nav-item i { font-size: 1.2rem; transition: transform 0.3s ease; }
+    .nav-item:hover i { transform: translateY(-2px); }
+    .nav-item span { font-size: 0.7rem; font-weight: 500; }
+
+    .nav-item .nav-avatar {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--info-color);
+        transition: transform 0.3s ease;
+    }
+    .nav-item:hover .nav-avatar {
+        transform: translateY(-2px);
+    }
+
+    .toast-container {
+        position: fixed; top: calc(var(--header-height) + 1rem);
+        left: 50%; transform: translateX(-50%); z-index: 1000;
+        display: flex; flex-direction: column; gap: 0.5rem;
+        pointer-events: none; width: 90%; max-width: 400px;
+    }
+
+    .toast {
+        background: rgba(30, 41, 59, 0.95);
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border); border-radius: 14px;
+        padding: 1rem 1.2rem; display: flex; align-items: center; gap: 0.8rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        transform: translateY(-20px); opacity: 0;
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        pointer-events: auto;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    .toast-icon {
+        width: 36px; height: 36px; border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1rem; flex-shrink: 0;
+    }
+    .toast.success .toast-icon { background: rgba(34, 197, 94, 0.15); color: var(--success-color); }
+    .toast.error .toast-icon { background: rgba(239, 68, 68, 0.15); color: var(--danger-color); }
+    .toast.info .toast-icon { background: rgba(59, 130, 246, 0.15); color: var(--info-color); }
+
+    .toast-content { flex: 1; }
+    .toast-title { color: var(--text-primary); font-size: 0.9rem; font-weight: 700; margin-bottom: 0.1rem; }
+    .toast-message { color: var(--text-secondary); font-size: 0.8rem; }
+
+    .toast-close {
+        color: var(--text-secondary); cursor: pointer; padding: 0.3rem;
+        border-radius: 6px; transition: all 0.2s ease; border: none;
+        background: none; font-size: 0.85rem;
+    }
+    .toast-close:hover { color: var(--text-primary); background: var(--glass-bg); }
+
+    .toast-progress {
+        position: absolute; bottom: 0; right: 0; height: 3px;
+        background: var(--success-color); border-radius: 0 0 14px 14px;
+        transition: width linear;
+    }
+
+    .modal-overlay {
+        position: fixed; top: 0; right: 0; bottom: 0; left: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+        display: flex; align-items: center; justify-content: center;
+        z-index: 1000; opacity: 0; visibility: hidden;
+        transition: all 0.3s ease; padding: 1rem;
+    }
+    .modal-overlay.show { opacity: 1; visibility: visible; }
+
+    .modal-box {
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.98), rgba(15, 23, 42, 0.98));
+        border: 1px solid var(--glass-border); border-radius: 24px;
+        padding: 2rem; width: 100%; max-width: 380px;
+        transform: scale(0.85) translateY(20px);
+        transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+    }
+    .modal-overlay.show .modal-box { transform: scale(1) translateY(0); }
+
+    .modal-icon {
+        width: 60px; height: 60px; border-radius: 16px;
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 1.2rem; font-size: 1.5rem;
+    }
+    .modal-icon.danger { background: rgba(239, 68, 68, 0.1); color: var(--danger-color); }
+
+    .modal-title { color: var(--text-primary); font-size: 1.3rem; font-weight: 700; text-align: center; margin-bottom: 0.5rem; }
+    .modal-text { color: var(--text-secondary); text-align: center; margin-bottom: 1.5rem; line-height: 1.7; font-size: 0.95rem; }
+    .modal-actions { display: flex; gap: 0.8rem; }
+
+    .modal-btn {
+        flex: 1; padding: 0.85rem 1.2rem; border: none; border-radius: 14px;
+        cursor: pointer; font-weight: 600; font-size: 0.95rem;
+        font-family: 'Tajawal', sans-serif; transition: all 0.3s ease;
+        display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    }
+    .modal-btn.danger {
+        background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.2); color: var(--danger-color);
+    }
+    .modal-btn.danger:hover {
+        background: rgba(239, 68, 68, 0.25); transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.15);
+    }
+    .modal-btn.secondary {
+        background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-secondary);
+    }
+    .modal-btn.secondary:hover {
+        background: var(--glass-hover); color: var(--text-primary); transform: translateY(-2px);
+    }
+
+    .ripple {
+        position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.15);
+        transform: scale(0); animation: rippleEffect 0.6s ease-out; pointer-events: none;
+    }
+    @keyframes rippleEffect { to { transform: scale(4); opacity: 0; } }
+
+    .skeleton {
+        background: linear-gradient(90deg, var(--glass-bg) 25%, var(--glass-hover) 50%, var(--glass-bg) 75%);
+        background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 12px;
+    }
+    @keyframes shimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+
+    /* ===== PROFILE PANEL ===== */
+    .profile-panel-overlay {
+        position: fixed;
+        top: 0; right: 0; bottom: 0; left: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+    .profile-panel-overlay.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .profile-panel {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.99), rgba(15, 23, 42, 0.99));
+        border: 1px solid var(--glass-border);
+        border-radius: 24px 24px 0 0;
+        padding: 1.5rem 2rem 2rem;
+        z-index: 1001;
+        transform: translateY(100%);
+        transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        box-shadow: 0 -10px 50px rgba(0, 0, 0, 0.4);
+        max-height: 85vh;
+        overflow-y: auto;
+    }
+    .profile-panel.show {
+        transform: translateY(0);
+    }
+
+    .profile-panel-handle {
+        width: 40px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 2px;
+        margin: 0 auto 1.5rem;
+        cursor: pointer;
+    }
+
+    .profile-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+    }
+
+    .profile-panel-title {
+        color: var(--text-primary);
+        font-size: 1.3rem;
+        font-weight: 700;
+    }
+
+    .profile-panel-close {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        border: 1px solid var(--glass-border);
+        background: var(--glass-bg);
+        color: var(--text-secondary);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+    .profile-panel-close:hover {
+        background: var(--glass-hover);
+        color: var(--text-primary);
+    }
+
+    .profile-login-section {
+        text-align: center;
+        padding: 2rem 0;
+    }
+
+    .profile-login-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05));
+        border: 2px solid rgba(59, 130, 246, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.2rem;
+        font-size: 2rem;
+        color: var(--info-color);
+    }
+
+    .profile-login-text {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.7;
+    }
+
+    .google-login-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 0.9rem 2rem;
+        background: #ffffff;
+        border: none;
+        border-radius: 14px;
+        cursor: pointer;
+        font-family: 'Tajawal', sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #333;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        direction: ltr;
+    }
+    .google-login-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+    }
+    .google-login-btn:active {
+        transform: translateY(0);
+    }
+
+    .google-login-btn img {
+        width: 22px;
+        height: 22px;
+    }
+
+    .google-login-btn.loading {
+        pointer-events: none;
+        opacity: 0.7;
+    }
+
+    .google-login-btn .btn-spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #ccc;
+        border-top-color: #333;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .profile-user-section {
+        display: none;
+    }
+    .profile-user-section.show {
+        display: block;
+    }
+
+    .profile-user-card {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 18px;
+        padding: 1.2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .profile-avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--info-color);
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        flex-shrink: 0;
+    }
+
+    .profile-user-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .profile-user-name {
+        color: var(--text-primary);
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 0.2rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .profile-user-email {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        direction: ltr;
+        text-align: right;
+    }
+
+    .profile-verified-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        background: rgba(34, 197, 94, 0.1);
+        border: 1px solid rgba(34, 197, 94, 0.2);
+        color: var(--success-color);
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 500;
+        margin-top: 0.4rem;
+    }
+
+    .profile-stats-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.8rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .profile-stat-item {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 14px;
+        padding: 1rem 0.5rem;
+        text-align: center;
+    }
+
+    .profile-stat-value {
+        color: var(--text-primary);
+        font-size: 1.2rem;
+        font-weight: 900;
+        margin-bottom: 0.2rem;
+    }
+
+    .profile-stat-label {
+        color: var(--text-secondary);
+        font-size: 0.7rem;
+    }
+
+    .profile-stat-item:nth-child(1) .profile-stat-value { color: var(--gold-color); }
+    .profile-stat-item:nth-child(2) .profile-stat-value { color: var(--success-color); }
+    .profile-stat-item:nth-child(3) .profile-stat-value { color: var(--info-color); }
+
+    .profile-menu-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+        margin-bottom: 1rem;
+    }
+
+    .profile-menu-item {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 0.9rem 1rem;
+        border-radius: 12px;
+        background: transparent;
+        border: none;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: 'Tajawal', sans-serif;
+        font-size: 0.95rem;
+        width: 100%;
+        text-align: right;
+    }
+    .profile-menu-item:hover {
+        background: var(--glass-hover);
+        color: var(--text-primary);
+    }
+    .profile-menu-item i {
+        width: 20px;
+        text-align: center;
+        font-size: 1rem;
+    }
+    .profile-menu-item .menu-arrow {
+        margin-right: auto;
+        font-size: 0.7rem;
+        opacity: 0.5;
+    }
+
+    .profile-logout-btn {
+        width: 100%;
+        padding: 0.9rem;
+        border-radius: 14px;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        background: rgba(239, 68, 68, 0.08);
+        color: var(--danger-color);
+        cursor: pointer;
+        font-family: 'Tajawal', sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    .profile-logout-btn:hover {
+        background: rgba(239, 68, 68, 0.15);
+        transform: translateY(-2px);
+    }
+
+    .profile-join-date {
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.75rem;
+        margin-top: 1rem;
+        opacity: 0.6;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (min-width: 768px) {
+        .providers-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+        .bottom-nav { display: none; }
+        .hero-title { font-size: 2.5rem; }
+        .content { padding-bottom: 3rem; }
+        .profile-panel { max-width: 450px; left: 50%; right: auto; transform: translateX(-50%) translateY(100%); border-radius: 24px 24px 0 0; }
+        .profile-panel.show { transform: translateX(-50%) translateY(0); }
+    }
+
+    @media (max-width: 767px) {
+        .content { padding-bottom: 5rem; }
+    }
+
+    @media (max-width: 480px) {
+        .hero-title { font-size: 1.6rem; }
+        .hero-subtitle { font-size: 0.95rem; }
+        .providers-grid { gap: 0.8rem; }
+        .provider-card { padding: 1.5rem 1rem; gap: 0.8rem; }
+        .provider-icon { width: 56px; height: 56px; border-radius: 16px; font-size: 1.4rem; }
+        .provider-name { font-size: 1.1rem; }
+        .quick-stats { gap: 0.6rem; }
+        .stat-card { padding: 1rem 0.5rem; }
+        .stat-value { font-size: 1.2rem; }
+        .stat-label { font-size: 0.7rem; }
+        .header { padding: 0 1rem; }
+        .modal-box { padding: 1.5rem; }
+        .modal-actions { flex-direction: column; }
+        .modal-btn { width: 100%; }
+        .profile-panel { padding: 1.2rem 1.5rem 1.5rem; }
+    }
+
+    @media (max-width: 360px) {
+        .currency-amount { font-size: 0.9rem; }
+        .currency-icon { width: 20px; height: 20px; }
+        .currency-info { padding: 0.4rem 0.8rem; gap: 0.4rem; }
+    }
+
+    @media (hover: none) {
+        .provider-card:hover { transform: none; box-shadow: none; }
+        .provider-card:hover .provider-icon { transform: none; }
+        .provider-card:hover .provider-arrow { opacity: 0; }
+        .provider-card:hover .provider-icon-ring { opacity: 0; }
+        .provider-card:active { transform: scale(0.97); background: var(--glass-hover); }
+        .provider-card.unavailable:active { transform: none; background: var(--glass-bg); }
+    }
+    </style>
+</head>
+<body>
+    <!-- Background -->
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+    </div>
+    <canvas id="particleCanvas"></canvas>
+    <div class="stars"></div>
+
+    <!-- Header -->
+    <header class="header" id="mainHeader">
+        <div class="header-right">
+            <div class="currency-info" onclick="goToPoints()" role="button" aria-label="رصيد النقاط">
+                <div class="currency-wrapper">
+                    <img src="https://www.raed.net/img?id=1236841" alt="عملة" class="currency-icon" loading="eager" decoding="async">
+                    <span class="currency-amount" id="userBalance">0</span>
+                </div>
+                <span class="add-currency" aria-label="إضافة نقاط">+</span>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="header-logo">
+                <img src="https://d.top4top.io/p_3228wytmh3.png" alt="Logo">
+            </div>
+        </div>
+
+        <div class="header-left">
+            <button class="header-btn" onclick="goToStore()" aria-label="المتجر">
+                <i class="fas fa-store"></i>
+            </button>
+            <button class="header-btn" onclick="showNotifications()" aria-label="الإشعارات">
+                <i class="fas fa-bell"></i>
+                <span class="badge" id="notifBadge"></span>
+            </button>
+            <div class="menu-container">
+                <button class="header-btn" onclick="toggleMenu()" aria-label="القائمة" aria-expanded="false" id="menuBtn">
+                    <i class="fas fa-ellipsis-vertical"></i>
+                </button>
+                <div class="menu-dropdown" id="menuDropdown" role="menu">
+                    <button class="menu-item" role="menuitem" onclick="goToProfile()">
+                        <i class="fas fa-user-circle"></i>
+                        الملف الشخصي
+                    </button>
+                    <button class="menu-item" role="menuitem" onclick="goToHistory()">
+                        <i class="fas fa-history"></i>
+                        سجل العمليات
+                    </button>
+                    <button class="menu-item" role="menuitem" onclick="goToSettings()">
+                        <i class="fas fa-cog"></i>
+                        الإعدادات
+                    </button>
+                    <div class="menu-divider"></div>
+                    <button class="menu-item logout" role="menuitem" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        تسجيل الخروج
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="content">
+        <div class="hero-section">
+            <h1 class="hero-title">موقع الكروت المجانية</h1>
+            <p class="hero-subtitle">اختر شبكتك واحصل على كروت شحن مجانية فوراً</p>
+        </div>
+
+        <div class="quick-stats">
+            <div class="stat-card">
+                <div class="stat-value" id="totalCards">1</div>
+                <div class="stat-label">شبكات متاحة</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="userPoints">0</div>
+                <div class="stat-label">نقاطك</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalUsers">12K+</div>
+                <div class="stat-label">مستخدم نشط</div>
+            </div>
+        </div>
+
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fas fa-signal"></i>
+                اختر شبكتك
+            </h2>
+            <span class="section-badge">فودافون متاح فقط</span>
+        </div>
+
+        <div class="providers-grid">
+            <!-- VODAFONE - Available, navigates to vodafone.html -->
+            <div class="provider-card vodafone" onclick="selectProvider('Vodafone', this)" role="button" tabindex="0" aria-label="اختيار فودافون">
+                <div class="provider-icon-wrapper">
+                    <div class="provider-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <div class="provider-icon-ring"></div>
+                </div>
+                <div class="provider-info">
+                    <h3 class="provider-name">Vodafone</h3>
+                    <p class="provider-desc">فودافون مصر</p>
+                </div>
+                <span class="provider-status"><span class="dot"></span> متاح</span>
+                <i class="fas fa-arrow-left provider-arrow"></i>
+            </div>
+
+            <!-- ETISALAT - Unavailable -->
+            <div class="provider-card etisalat unavailable" onclick="selectProvider('Etisalat', this)" role="button" tabindex="0" aria-label="اتصالات - غير متاح حالياً">
+                <div class="unavailable-ribbon">غير متاح</div>
+                <div class="provider-icon-wrapper">
+                    <div class="provider-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <div class="provider-icon-ring"></div>
+                </div>
+                <div class="provider-info">
+                    <h3 class="provider-name">Etisalat</h3>
+                    <p class="provider-desc">اتصالات مصر</p>
+                </div>
+                <span class="provider-status status-unavailable"><span class="dot"></span> غير متاح</span>
+                <i class="fas fa-arrow-left provider-arrow"></i>
+            </div>
+
+            <!-- ORANGE - Unavailable -->
+            <div class="provider-card orange unavailable" onclick="selectProvider('Orange', this)" role="button" tabindex="0" aria-label="أورانج - غير متاح حالياً">
+                <div class="unavailable-ribbon">غير متاح</div>
+                <div class="provider-icon-wrapper">
+                    <div class="provider-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <div class="provider-icon-ring"></div>
+                </div>
+                <div class="provider-info">
+                    <h3 class="provider-name">Orange</h3>
+                    <p class="provider-desc">أورانج مصر</p>
+                </div>
+                <span class="provider-status status-unavailable"><span class="dot"></span> غير متاح</span>
+                <i class="fas fa-arrow-left provider-arrow"></i>
+            </div>
+
+            <!-- WE - Unavailable -->
+            <div class="provider-card we unavailable" onclick="selectProvider('We', this)" role="button" tabindex="0" aria-label="وي - غير متاح حالياً">
+                <div class="unavailable-ribbon">غير متاح</div>
+                <div class="provider-icon-wrapper">
+                    <div class="provider-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <div class="provider-icon-ring"></div>
+                </div>
+                <div class="provider-info">
+                    <h3 class="provider-name">We</h3>
+                    <p class="provider-desc">المصرية للاتصالات</p>
+                </div>
+                <span class="provider-status status-unavailable"><span class="dot"></span> غير متاح</span>
+                <i class="fas fa-arrow-left provider-arrow"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav" id="bottomNav">
+        <button class="nav-item active" onclick="goHome()" aria-label="الرئيسية">
+            <i class="fas fa-home"></i>
+            <span>الرئيسية</span>
+        </button>
+        <button class="nav-item" onclick="goToStore()" aria-label="المتجر">
+            <i class="fas fa-store"></i>
+            <span>المتجر</span>
+        </button>
+        <button class="nav-item" onclick="goToPoints()" aria-label="النقاط">
+            <i class="fas fa-coins"></i>
+            <span>النقاط</span>
+        </button>
+        <button class="nav-item" onclick="goToProfile()" aria-label="حسابي" id="profileNavItem">
+            <i class="fas fa-user"></i>
+            <span>حسابي</span>
+        </button>
+    </nav>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Profile Panel (Slide-up) -->
+    <div class="profile-panel-overlay" id="profileOverlay" onclick="closeProfilePanel()"></div>
+    <div class="profile-panel" id="profilePanel">
+        <div class="profile-panel-handle" onclick="closeProfilePanel()"></div>
+        <div class="profile-panel-header">
+            <span class="profile-panel-title">حسابي</span>
+            <button class="profile-panel-close" onclick="closeProfilePanel()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Login Section (shown when not logged in) -->
+        <div class="profile-login-section" id="profileLoginSection">
+            <div class="profile-login-icon">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <p class="profile-login-text">
+                قم بتسجيل الدخول بحساب Google للوصول إلى جميع الميزات وحفظ تقدمك
+            </p>
+            <button class="google-login-btn" id="googleLoginBtn" onclick="signInWithGoogle()">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                <span>تسجيل الدخول بـ Google</span>
+            </button>
+        </div>
+
+        <!-- User Section (shown when logged in) -->
+        <div class="profile-user-section" id="profileUserSection">
+            <div class="profile-user-card">
+                <img src="" alt="صورة المستخدم" class="profile-avatar" id="profileAvatar">
+                <div class="profile-user-info">
+                    <div class="profile-user-name" id="profileName">المستخدم</div>
+                    <div class="profile-user-email" id="profileEmail">email@example.com</div>
+                    <div class="profile-verified-badge">
+                        <i class="fas fa-check-circle"></i>
+                        حساب موثق
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-stats-row">
+                <div class="profile-stat-item">
+                    <div class="profile-stat-value" id="profilePoints">0</div>
+                    <div class="profile-stat-label">نقاطك</div>
+                </div>
+                <div class="profile-stat-item">
+                    <div class="profile-stat-value" id="profileCards">0</div>
+                    <div class="profile-stat-label">كروت مستلمة</div>
+                </div>
+                <div class="profile-stat-item">
+                    <div class="profile-stat-value" id="profileLevel">1</div>
+                    <div class="profile-stat-label">المستوى</div>
+                </div>
+            </div>
+
+            <div class="profile-menu-list">
+                <button class="profile-menu-item" onclick="goToHistory()">
+                    <i class="fas fa-history"></i>
+                    سجل العمليات
+                    <i class="fas fa-chevron-left menu-arrow"></i>
+                </button>
+                <button class="profile-menu-item" onclick="goToSettings()">
+                    <i class="fas fa-cog"></i>
+                    الإعدادات
+                    <i class="fas fa-chevron-left menu-arrow"></i>
+                </button>
+                <button class="profile-menu-item" onclick="goToInvite()">
+                    <i class="fas fa-user-friends"></i>
+                    دعوة الأصدقاء
+                    <i class="fas fa-chevron-left menu-arrow"></i>
+                </button>
+                <button class="profile-menu-item" onclick="goToSupport()">
+                    <i class="fas fa-headset"></i>
+                    الدعم الفني
+                    <i class="fas fa-chevron-left menu-arrow"></i>
+                </button>
+            </div>
+
+            <button class="profile-logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                تسجيل الخروج
+            </button>
+
+            <div class="profile-join-date" id="profileJoinDate"></div>
+        </div>
+    </div>
+
+    <!-- Logout Modal -->
+    <div class="modal-overlay" id="logoutModal" role="dialog" aria-modal="true" aria-labelledby="logoutTitle">
+        <div class="modal-box">
+            <div class="modal-icon danger">
+                <i class="fas fa-power-off"></i>
+            </div>
+            <h3 class="modal-title" id="logoutTitle">تسجيل الخروج</h3>
+            <p class="modal-text">هل أنت متأكد من رغبتك في تسجيل الخروج من حسابك؟</p>
+            <div class="modal-actions">
+                <button class="modal-btn danger" onclick="confirmLogout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    خروج
+                </button>
+                <button class="modal-btn secondary" onclick="closeLogoutModal()">
+                    إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyArjc4iLYD0VcP4SvdvUpwI4zwLKpOxAVY",
+            authDomain: "veow-app.firebaseapp.com",
+            projectId: "veow-app",
+            storageBucket: "veow-app.firebasestorage.app",
+            messagingSenderId: "868100436269",
+            appId: "1:868100436269:web:194b4a6b4f42bda53aa3a4",
+            measurementId: "G-GZ44BE2F8E"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // Expose to global scope for onclick handlers
+        window.firebaseAuth = auth;
+        window.firebaseProvider = provider;
+        window.firebaseSignInWithPopup = signInWithPopup;
+        window.firebaseSignOut = signOut;
+
+        // Listen for auth state changes
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                handleUserLoggedIn(user);
+            } else {
+                handleUserLoggedOut();
+            }
+        });
+    </script>
+
+<script>
+// ===== STATE =====
+let allowNavigation = false;
+let isSelecting = false;
+let menuOpen = false;
+let lastScroll = 0;
+let currentUser = null;
+let profilePanelOpen = false;
+
+// ===== UNAVAILABLE PROVIDERS LIST =====
+const unavailableProviders = ['Etisalat', 'Orange', 'We'];
+
+// ===== PRELOAD =====
+const preloadImage = new Image();
+preloadImage.src = 'https://www.raed.net/img?id=1236841';
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => {
+    requestAnimationFrame(() => {
+        document.body.classList.add('loaded');
+    });
+    initStars();
+    initParticles();
+    checkAuth();
+    setupScrollHandler();
+    setupCardInteractions();
+    setupKeyboardNav();
+    setupProfileSwipe();
+});
+
+// ===== FIREBASE AUTH HANDLERS =====
+function handleUserLoggedIn(user) {
+    currentUser = user;
+
+    document.getElementById('profileLoginSection').style.display = 'none';
+    document.getElementById('profileUserSection').classList.add('show');
+
+    document.getElementById('profileAvatar').src = user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || 'U') + '&background=3b82f6&color=fff&size=128';
+    document.getElementById('profileName').textContent = user.displayName || 'مستخدم';
+    document.getElementById('profileEmail').textContent = user.email || '';
+
+    if (user.metadata && user.metadata.creationTime) {
+        const joinDate = new Date(user.metadata.creationTime);
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('profileJoinDate').textContent = 'عضو منذ ' + joinDate.toLocaleDateString('ar-EG', options);
+    }
+
+    updateNavAvatar(user.photoURL);
+
+    const userData = JSON.parse(localStorage.getItem('userData')) || {};
+    userData.isLoggedIn = true;
+    userData.displayName = user.displayName;
+    userData.email = user.email;
+    userData.photoURL = user.photoURL;
+    userData.uid = user.uid;
+    localStorage.setItem('userData', JSON.stringify(userData));
+
+    const balance = userData.balance || '0';
+    document.getElementById('userBalance').textContent = balance;
+    document.getElementById('userPoints').textContent = balance;
+    document.getElementById('profilePoints').textContent = balance;
+}
+
+function handleUserLoggedOut() {
+    currentUser = null;
+
+    document.getElementById('profileLoginSection').style.display = '';
+    document.getElementById('profileUserSection').classList.remove('show');
+
+    resetNavAvatar();
+
+    const userData = JSON.parse(localStorage.getItem('userData')) || {};
+    userData.isLoggedIn = false;
+    localStorage.setItem('userData', JSON.stringify(userData));
+
+    document.getElementById('userBalance').textContent = '0';
+    document.getElementById('userPoints').textContent = '0';
+}
+
+function updateNavAvatar(photoURL) {
+    const navItem = document.getElementById('profileNavItem');
+    if (navItem && photoURL) {
+        const icon = navItem.querySelector('i');
+        if (icon) {
+            const img = document.createElement('img');
+            img.src = photoURL;
+            img.alt = 'حسابي';
+            img.className = 'nav-avatar';
+            img.referrerPolicy = 'no-referrer';
+            icon.replaceWith(img);
+        }
+    }
+}
+
+function resetNavAvatar() {
+    const navItem = document.getElementById('profileNavItem');
+    if (navItem) {
+        const img = navItem.querySelector('img.nav-avatar');
+        if (img) {
+            const icon = document.createElement('i');
+            icon.className = 'fas fa-user';
+            img.replaceWith(icon);
+        }
+    }
+}
+
+// ===== GOOGLE SIGN IN =====
+async function signInWithGoogle() {
+    const btn = document.getElementById('googleLoginBtn');
+    const originalContent = btn.innerHTML;
+
+    btn.classList.add('loading');
+    btn.innerHTML = '<div class="btn-spinner"></div><span>جاري التسجيل...</span>';
+
+    try {
+        const result = await window.firebaseSignInWithPopup(window.firebaseAuth, window.firebaseProvider);
+        const user = result.user;
+        showToast('success', 'تم تسجيل الدخول', `مرحباً ${user.displayName || 'بك'}!`);
+    } catch (error) {
+        console.error('Login error:', error);
+        if (error.code === 'auth/popup-closed-by-user') {
+            showToast('info', 'تم الإلغاء', 'تم إلغاء عملية تسجيل الدخول');
+        } else if (error.code === 'auth/popup-blocked') {
+            showToast('error', 'خطأ', 'يرجى السماح بالنوافذ المنبثقة في المتصفح');
+        } else if (error.code === 'auth/network-request-failed') {
+            showToast('error', 'خطأ في الاتصال', 'تحقق من اتصالك بالإنترنت');
+        } else {
+            showToast('error', 'خطأ', 'حدث خطأ أثناء تسجيل الدخول. حاول مرة أخرى');
+        }
+    } finally {
+        btn.classList.remove('loading');
+        btn.innerHTML = originalContent;
+    }
+}
+
+window.signInWithGoogle = signInWithGoogle;
+
+// ===== PROFILE PANEL =====
+function openProfilePanel() {
+    profilePanelOpen = true;
+    document.getElementById('profileOverlay').classList.add('show');
+    document.getElementById('profilePanel').classList.add('show');
+    document.body.style.overflow = 'hidden';
+
+    if (currentUser) {
+        const userData = JSON.parse(localStorage.getItem('userData')) || {};
+        document.getElementById('profilePoints').textContent = userData.balance || '0';
+        document.getElementById('profileCards').textContent = userData.cardsReceived || '0';
+    }
+}
+
+function closeProfilePanel() {
+    profilePanelOpen = false;
+    document.getElementById('profileOverlay').classList.remove('show');
+    document.getElementById('profilePanel').classList.remove('show');
+    document.body.style.overflow = '';
+}
+
+function setupProfileSwipe() {
+    const panel = document.getElementById('profilePanel');
+    let startY = 0;
+    let currentY = 0;
+    let isDragging = false;
+
+    panel.addEventListener('touchstart', (e) => {
+        if (panel.scrollTop === 0) {
+            startY = e.touches[0].clientY;
+            isDragging = true;
+        }
+    }, { passive: true });
+
+    panel.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        currentY = e.touches[0].clientY;
+        const diff = currentY - startY;
+        if (diff > 0) {
+            panel.style.transform = window.innerWidth >= 768
+                ? `translateX(-50%) translateY(${diff}px)`
+                : `translateY(${diff}px)`;
+        }
+    }, { passive: true });
+
+    panel.addEventListener('touchend', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        const diff = currentY - startY;
+        if (diff > 100) {
+            closeProfilePanel();
+        }
+        setTimeout(() => {
+            if (profilePanelOpen) {
+                panel.style.transform = '';
+            }
+        }, 50);
+    });
+}
+
+// ===== STARS =====
+function initStars() {
+    const container = document.querySelector('.stars');
+    const count = window.innerWidth < 768 ? 80 : 150;
+    const fragment = document.createDocumentFragment();
+
+    for (let i = 0; i < count; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        const size = Math.random();
+        star.classList.add(size < 0.5 ? 'small' : size < 0.8 ? 'medium' : 'large');
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.setProperty('--duration', `${2 + Math.random() * 4}s`);
+        star.style.setProperty('--delay', `${Math.random() * 5}s`);
+        star.style.setProperty('--opacity', `${0.3 + Math.random() * 0.7}`);
+        fragment.appendChild(star);
+    }
+    container.appendChild(fragment);
+}
+
+// ===== PARTICLE SYSTEM =====
+function initParticles() {
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animationId;
+    let w, h;
+
+    function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    class Particle {
+        constructor() { this.reset(); }
+        reset() {
+            this.x = Math.random() * w;
+            this.y = Math.random() * h;
+            this.size = Math.random() * 1.5 + 0.5;
+            this.speedX = (Math.random() - 0.5) * 0.3;
+            this.speedY = (Math.random() - 0.5) * 0.3;
+            this.opacity = Math.random() * 0.3 + 0.05;
+        }
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            if (this.x < 0 || this.x > w || this.y < 0 || this.y > h) this.reset();
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+            ctx.fill();
+        }
+    }
+
+    const count = window.innerWidth < 768 ? 30 : 60;
+    for (let i = 0; i < count; i++) particles.push(new Particle());
+
+    function drawLines() {
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 120) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(255, 255, 255, ${0.03 * (1 - dist / 120)})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, w, h);
+        particles.forEach(p => { p.update(); p.draw(); });
+        drawLines();
+        animationId = requestAnimationFrame(animate);
+    }
+    animate();
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) cancelAnimationFrame(animationId);
+        else animate();
+    });
+}
+
+// ===== SCROLL =====
+function setupScrollHandler() {
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            requestAnimationFrame(() => { handleScroll(); ticking = false; });
+            ticking = true;
+        }
+    }, { passive: true });
+}
+
+function handleScroll() {
+    const currentScroll = window.pageYOffset;
+    const header = document.getElementById('mainHeader');
+    if (currentScroll > 80) header.classList.add('scrolled');
+    else header.classList.remove('scrolled');
+    lastScroll = currentScroll;
+}
+
+// ===== CARD INTERACTIONS =====
+function setupCardInteractions() {
+    document.querySelectorAll('.provider-card').forEach(card => {
+        // Only add full interactions to available cards
+        if (!card.classList.contains('unavailable')) {
+            card.addEventListener('click', createRipple);
+            if (window.matchMedia('(hover: hover)').matches) {
+                card.addEventListener('mousemove', handleCardHover);
+                card.addEventListener('mouseleave', resetCard);
+            }
+        }
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+        });
+    });
+}
+
+function createRipple(e) {
+    const card = e.currentTarget;
+    if (card.classList.contains('unavailable')) return;
+    const existing = card.querySelector('.ripple');
+    if (existing) existing.remove();
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    const rect = card.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+    ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+    card.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 600);
+}
+
+function handleCardHover(e) {
+    const card = e.currentTarget;
+    if (card.classList.contains('unavailable')) return;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((y - centerY) / centerY) * 8;
+    const rotateY = -((x - centerX) / centerX) * 8;
+    card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale(1.02)`;
+}
+
+function resetCard(e) { e.currentTarget.style.transform = ''; }
+
+// ===== KEYBOARD NAV =====
+function setupKeyboardNav() {
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeLogoutModal();
+            closeProfilePanel();
+            if (menuOpen) toggleMenu();
+        }
+    });
+}
+
+// ===== MENU =====
+function toggleMenu() {
+    const dropdown = document.getElementById('menuDropdown');
+    const btn = document.getElementById('menuBtn');
+    menuOpen = !menuOpen;
+    dropdown.classList.toggle('show', menuOpen);
+    btn.setAttribute('aria-expanded', menuOpen);
+}
+
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.menu-container') && menuOpen) toggleMenu();
+    const modal = document.getElementById('logoutModal');
+    if (e.target === modal) closeLogoutModal();
+});
+
+// ===== AUTH =====
+function checkAuth() {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    if (!userData || !userData.isLoggedIn) {
+        document.getElementById('userBalance').textContent = '0';
+        document.getElementById('userPoints').textContent = '0';
+    } else {
+        const balance = userData.balance || '0';
+        document.getElementById('userBalance').textContent = balance;
+        document.getElementById('userPoints').textContent = balance;
+    }
+}
+
+// ===== TOAST SYSTEM =====
+function showToast(type, title, message, duration = 3500) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+        <div class="toast-icon">
+            <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : 'info-circle'}"></i>
+        </div>
+        <div class="toast-content">
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
+        </div>
+        <button class="toast-close" onclick="this.closest('.toast').remove()">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+    container.appendChild(toast);
+    requestAnimationFrame(() => { requestAnimationFrame(() => { toast.classList.add('show'); }); });
+    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, duration);
+}
+
+// ===== SELECT PROVIDER =====
+function selectProvider(provider, element) {
+    if (isSelecting) return;
+
+    // Check if provider is unavailable
+    if (unavailableProviders.includes(provider)) {
+        const names = { 'Etisalat': 'اتصالات', 'Orange': 'أورانج', 'We': 'وي' };
+        showToast('error', 'غير متاح حالياً', `شبكة ${names[provider]} غير متاحة حالياً. جرّب شبكة فودافون.`);
+        return;
+    }
+
+    isSelecting = true;
+
+    const userData = JSON.parse(localStorage.getItem('userData')) || {};
+    userData.selectedProvider = provider;
+    localStorage.setItem('userData', JSON.stringify(userData));
+
+    element.classList.add('selecting');
+    setTimeout(() => element.classList.remove('selecting'), 500);
+
+    const names = { 'Vodafone': 'فودافون', 'Etisalat': 'اتصالات', 'Orange': 'أورانج', 'We': 'وي' };
+    showToast('success', 'تم الاختيار', `تم اختيار شبكة ${names[provider] || provider} بنجاح`);
+
+    // Navigate to vodafone.html for Vodafone
+    if (provider === 'Vodafone') {
+        setTimeout(() => {
+            allowNavigation = true;
+            window.location.href = 'vodafone.html';
+        }, 800);
+    }
+
+    setTimeout(() => { isSelecting = false; }, 500);
+}
+
+// ===== LOGOUT =====
+function logout() {
+    closeProfilePanel();
+    document.getElementById('logoutModal').classList.add('show');
+    if (menuOpen) toggleMenu();
+}
+
+function closeLogoutModal() {
+    document.getElementById('logoutModal').classList.remove('show');
+}
+
+async function confirmLogout() {
+    closeLogoutModal();
+
+    try {
+        if (window.firebaseAuth) {
+            await window.firebaseSignOut(window.firebaseAuth);
+        }
+    } catch (e) {
+        console.error('Sign out error:', e);
+    }
+
+    const userData = JSON.parse(localStorage.getItem('userData')) || {};
+    userData.isLoggedIn = false;
+    localStorage.setItem('userData', JSON.stringify(userData));
+
+    handleUserLoggedOut();
+    showToast('success', 'تم الخروج', 'تم تسجيل الخروج بنجاح');
+}
+
+// ===== NAVIGATION =====
+function setActiveNav(index) {
+    document.querySelectorAll('.nav-item').forEach((item, i) => {
+        item.classList.toggle('active', i === index);
+    });
+}
+
+function goToStore() {
+    allowNavigation = true;
+    window.location.href = 'store.html';
+}
+
+function goToPoints() {
+    allowNavigation = true;
+    window.location.href = 'point.html';
+}
+
+function goToProfile() {
+    if (menuOpen) toggleMenu();
+    setActiveNav(3);
+    openProfilePanel();
+}
+
+function goToHistory() {
+    closeProfilePanel();
+    showToast('info', 'قريباً', 'سجل العمليات قيد التطوير');
+    if (menuOpen) toggleMenu();
+}
+
+function goToSettings() {
+    closeProfilePanel();
+    showToast('info', 'قريباً', 'الإعدادات قيد التطوير');
+    if (menuOpen) toggleMenu();
+}
+
+function goToInvite() {
+    closeProfilePanel();
+    showToast('info', 'قريباً', 'ميزة الدعوة قيد التطوير');
+}
+
+function goToSupport() {
+    closeProfilePanel();
+    showToast('info', 'قريباً', 'الدعم الفني قيد التطوير');
+}
+
+function goHome() {
+    setActiveNav(0);
+    closeProfilePanel();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showNotifications() {
+    showToast('info', 'الإشعارات', 'لا توجد إشعارات جديدة');
+    const badge = document.getElementById('notifBadge');
+    if (badge) badge.style.display = 'none';
+}
+
+// ===== NAVIGATION GUARD =====
+window.addEventListener('load', () => {
+    window.history.pushState({ page: 1 }, '', '');
+    window.history.pushState({ page: 2 }, '', '');
+});
+
+window.addEventListener('popstate', (e) => {
+    if (profilePanelOpen) {
+        closeProfilePanel();
+        window.history.pushState({ page: 2 }, '', '');
+        return;
+    }
+    if (e.state) window.history.forward();
+});
+
+window.addEventListener('beforeunload', (e) => {
+    if (!allowNavigation) { e.preventDefault(); e.returnValue = ''; }
+});
+
+document.addEventListener('keydown', (e) => {
+    if ((e.key === 'Backspace' || e.key === 'BrowserBack') &&
+        !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+        e.preventDefault();
+    }
+    if (e.altKey && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) e.preventDefault();
+});
+
+document.addEventListener('contextmenu', e => e.preventDefault());
+</script>
+</body>
+</html>
