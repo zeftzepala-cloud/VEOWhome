@@ -1,0 +1,2411 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم المسؤول - ڤودافون كروت</title>
+    <meta name="description" content="لوحة تحكم المسؤول لإدارة منصة كروت شحن ڤودافون">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap');
+
+    /* ═══════════════════════════════════════
+       CSS VARIABLES & RESET
+    ═══════════════════════════════════════ */
+    :root {
+        --primary: #e60000;
+        --primary-dark: #b30000;
+        --primary-light: #ff3333;
+        --accent: #3b82f6;
+        --accent-dark: #2563eb;
+        --gold: #FFD700;
+        --gold-dim: rgba(255, 215, 0, 0.12);
+        --success: #10b981;
+        --success-bg: rgba(16, 185, 129, 0.12);
+        --warning: #f59e0b;
+        --warning-bg: rgba(245, 158, 11, 0.12);
+        --danger: #ef4444;
+        --danger-bg: rgba(239, 68, 68, 0.12);
+        --info: #3b82f6;
+        --info-bg: rgba(59, 130, 246, 0.12);
+
+        --bg-body: #0a0f1e;
+        --bg-sidebar: #0f172a;
+        --bg-card: rgba(15, 23, 42, 0.85);
+        --bg-card-hover: rgba(15, 23, 42, 1);
+        --bg-input: rgba(255, 255, 255, 0.04);
+        --bg-table-row: rgba(255, 255, 255, 0.02);
+        --bg-table-hover: rgba(255, 255, 255, 0.06);
+
+        --text-primary: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --text-muted: #475569;
+        --text-inverse: #0f172a;
+
+        --border: rgba(255, 255, 255, 0.08);
+        --border-light: rgba(255, 255, 255, 0.12);
+
+        --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+        --shadow-md: 0 4px 20px rgba(0,0,0,0.4);
+        --shadow-lg: 0 10px 40px rgba(0,0,0,0.5);
+        --shadow-red: 0 4px 20px rgba(230, 0, 0, 0.25);
+
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-xl: 24px;
+
+        --sidebar-width: 280px;
+        --header-height: 64px;
+
+        --transition-fast: 0.15s ease;
+        --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+        font-family: 'Tajawal', sans-serif;
+        background: var(--bg-body);
+        color: var(--text-primary);
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    /* ═══════════════════════════════════════
+       ANIMATED BG
+    ═══════════════════════════════════════ */
+    .bg-canvas {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+    }
+    .bg-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(120px);
+        opacity: 0.08;
+    }
+    .bg-orb:nth-child(1) {
+        width: 500px; height: 500px;
+        background: var(--primary);
+        top: -10%; right: -5%;
+        animation: float1 30s ease-in-out infinite;
+    }
+    .bg-orb:nth-child(2) {
+        width: 400px; height: 400px;
+        background: var(--accent);
+        bottom: -10%; left: -10%;
+        animation: float2 25s ease-in-out infinite;
+    }
+    .bg-orb:nth-child(3) {
+        width: 300px; height: 300px;
+        background: var(--gold);
+        top: 50%; left: 40%;
+        opacity: 0.04;
+        animation: float3 20s ease-in-out infinite;
+    }
+    @keyframes float1 {
+        0%,100%{transform:translate(0,0) scale(1)}
+        50%{transform:translate(-60px,40px) scale(1.1)}
+    }
+    @keyframes float2 {
+        0%,100%{transform:translate(0,0)}
+        50%{transform:translate(40px,-60px) scale(1.05)}
+    }
+    @keyframes float3 {
+        0%,100%{transform:translate(-50%,-50%) scale(1)}
+        50%{transform:translate(-50%,-50%) scale(1.2)}
+    }
+
+    .grid-overlay {
+        position: fixed;
+        inset: 0;
+        background-image:
+            linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+        background-size: 50px 50px;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    /* ═══════════════════════════════════════
+       AUTH SCREEN (login / unauthorized)
+    ═══════════════════════════════════════ */
+    .auth-screen {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-body);
+    }
+    .auth-screen .bg-canvas,
+    .auth-screen .grid-overlay {
+        position: absolute;
+    }
+    .auth-card {
+        position: relative;
+        z-index: 2;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-xl);
+        padding: 3rem 2.5rem;
+        text-align: center;
+        max-width: 440px;
+        width: 90%;
+        backdrop-filter: blur(20px);
+        box-shadow: var(--shadow-lg);
+        animation: scaleIn 0.5s cubic-bezier(0.4,0,0.2,1);
+    }
+    @keyframes scaleIn {
+        from{opacity:0;transform:scale(0.9) translateY(20px)}
+        to{opacity:1;transform:scale(1) translateY(0)}
+    }
+    .auth-logo {
+        width: 80px; height: 80px;
+        margin: 0 auto 1.5rem;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        border-radius: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: #fff;
+        box-shadow: var(--shadow-red);
+    }
+    .auth-card h1 {
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+    }
+    .auth-card .auth-subtitle {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+        line-height: 1.7;
+    }
+    .auth-card .google-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        width: 100%;
+        padding: 0.9rem 1.5rem;
+        background: #fff;
+        color: #333;
+        border: none;
+        border-radius: var(--radius-md);
+        font-family: 'Tajawal', sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: var(--transition-normal);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .auth-card .google-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+    }
+    .auth-card .google-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none !important;
+    }
+    .auth-card .google-btn img {
+        width: 22px; height: 22px;
+    }
+    .auth-denied {
+        color: var(--danger);
+        font-size: 1rem;
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: var(--danger-bg);
+        border: 1px solid rgba(239,68,68,0.2);
+        border-radius: var(--radius-md);
+        display: none;
+    }
+    .auth-denied.show { display: block; }
+    .auth-spinner {
+        display: none;
+        margin: 2rem auto 0;
+    }
+    .auth-spinner.show { display: block; }
+    .spinner {
+        width: 40px; height: 40px;
+        border: 3px solid var(--border);
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto;
+    }
+    @keyframes spin { to{transform:rotate(360deg)} }
+
+    .auth-signout-link {
+        display: inline-block;
+        margin-top: 1rem;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        cursor: pointer;
+        text-decoration: underline;
+        border: none;
+        background: none;
+        font-family: 'Tajawal', sans-serif;
+    }
+    .auth-signout-link:hover { color: var(--text-primary); }
+
+    /* ═══════════════════════════════════════
+       LAYOUT: SIDEBAR + MAIN
+    ═══════════════════════════════════════ */
+    .app-layout {
+        display: none;
+        position: relative;
+        z-index: 1;
+        min-height: 100vh;
+    }
+    .app-layout.visible { display: flex; }
+
+    /* SIDEBAR */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: var(--sidebar-width);
+        height: 100vh;
+        background: var(--bg-sidebar);
+        border-left: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        z-index: 100;
+        transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+        overflow-y: auto;
+    }
+
+    .sidebar-header {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .sidebar-logo {
+        width: 42px; height: 42px;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        font-size: 1rem;
+        color: #fff;
+        flex-shrink: 0;
+    }
+    .sidebar-brand {
+        display: flex;
+        flex-direction: column;
+    }
+    .sidebar-brand-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+    .sidebar-brand-sub {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+    }
+
+    .sidebar-nav {
+        flex: 1;
+        padding: 1rem 0;
+    }
+    .sidebar-section-label {
+        padding: 0.5rem 1.5rem;
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.7rem 1.5rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: var(--transition-fast);
+        border: none;
+        background: none;
+        width: 100%;
+        font-family: 'Tajawal', sans-serif;
+        text-align: right;
+    }
+    .sidebar-link:hover {
+        color: var(--text-primary);
+        background: rgba(255,255,255,0.04);
+    }
+    .sidebar-link.active {
+        color: var(--primary);
+        background: rgba(230,0,0,0.08);
+        border-left: 3px solid var(--primary);
+    }
+    .sidebar-link i {
+        width: 20px;
+        text-align: center;
+        font-size: 0.9rem;
+    }
+    .sidebar-link .badge {
+        margin-right: auto;
+        margin-left: 0;
+        background: var(--primary);
+        color: #fff;
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 0.15rem 0.5rem;
+        border-radius: 50px;
+        min-width: 20px;
+        text-align: center;
+    }
+
+    .sidebar-footer {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .sidebar-avatar {
+        width: 36px; height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--border);
+    }
+    .sidebar-user-info {
+        flex: 1;
+        min-width: 0;
+    }
+    .sidebar-user-name {
+        font-size: 0.85rem;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .sidebar-user-role {
+        font-size: 0.72rem;
+        color: var(--success);
+    }
+    .sidebar-logout-btn {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 0.4rem;
+        border-radius: var(--radius-sm);
+        transition: var(--transition-fast);
+    }
+    .sidebar-logout-btn:hover {
+        color: var(--danger);
+        background: var(--danger-bg);
+    }
+
+    /* MOBILE SIDEBAR TOGGLE */
+    .mobile-menu-btn {
+        display: none;
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 200;
+        width: 44px; height: 44px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border);
+        background: var(--bg-sidebar);
+        color: var(--text-primary);
+        font-size: 1.1rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+    }
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 90;
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+        margin-right: var(--sidebar-width);
+        flex: 1;
+        min-height: 100vh;
+        padding: 0;
+    }
+
+    /* HEADER */
+    .main-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: rgba(10, 15, 30, 0.8);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border);
+        padding: 0 2rem;
+        height: var(--header-height);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+    .header-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+    }
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .header-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius-sm);
+        font-family: 'Tajawal', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border: 1px solid var(--border);
+        background: var(--bg-input);
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: var(--transition-fast);
+    }
+    .header-btn:hover {
+        background: rgba(255,255,255,0.08);
+        color: var(--text-primary);
+        border-color: var(--border-light);
+    }
+    .header-btn.btn-primary-sm {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        border-color: var(--primary);
+        color: #fff;
+    }
+    .header-btn.btn-primary-sm:hover {
+        box-shadow: var(--shadow-red);
+    }
+
+    /* PAGE CONTAINER */
+    .page-content {
+        padding: 2rem;
+        max-width: 1400px;
+    }
+
+    /* ═══════════════════════════════════════
+       STAT CARDS
+    ═══════════════════════════════════════ */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 2rem;
+    }
+    .stat-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 1.5rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        backdrop-filter: blur(10px);
+        transition: var(--transition-normal);
+        position: relative;
+        overflow: hidden;
+    }
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0; right: 0;
+        width: 100px; height: 100px;
+        border-radius: 50%;
+        filter: blur(40px);
+        opacity: 0.15;
+    }
+    .stat-card:hover {
+        border-color: var(--border-light);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+    .stat-icon {
+        width: 48px; height: 48px;
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+    .stat-icon.red { background: rgba(230,0,0,0.12); color: var(--primary); }
+    .stat-card:nth-child(1)::before { background: var(--primary); }
+    .stat-icon.yellow { background: var(--warning-bg); color: var(--warning); }
+    .stat-card:nth-child(2)::before { background: var(--warning); }
+    .stat-icon.green { background: var(--success-bg); color: var(--success); }
+    .stat-card:nth-child(3)::before { background: var(--success); }
+    .stat-icon.blue { background: var(--info-bg); color: var(--info); }
+    .stat-card:nth-child(4)::before { background: var(--info); }
+    .stat-icon.purple { background: rgba(139,92,246,0.12); color: #8b5cf6; }
+    .stat-card:nth-child(5)::before { background: #8b5cf6; }
+
+    .stat-info { flex: 1; }
+    .stat-label {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        font-weight: 500;
+        margin-bottom: 0.3rem;
+    }
+    .stat-value {
+        font-size: 1.8rem;
+        font-weight: 800;
+        line-height: 1;
+    }
+
+    /* ═══════════════════════════════════════
+       PANEL (card container)
+    ═══════════════════════════════════════ */
+    .panel {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        backdrop-filter: blur(10px);
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+    }
+    .panel-header {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+    .panel-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .panel-title i {
+        color: var(--primary);
+        font-size: 0.9rem;
+    }
+    .panel-title .count-badge {
+        background: var(--primary);
+        color: #fff;
+        font-size: 0.7rem;
+        padding: 0.1rem 0.5rem;
+        border-radius: 50px;
+        font-weight: 700;
+    }
+    .panel-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .panel-body {
+        padding: 0;
+    }
+    .panel-body.padded { padding: 1.5rem; }
+
+    /* ═══════════════════════════════════════
+       SEARCH INPUT (panel)
+    ═══════════════════════════════════════ */
+    .search-input-wrap {
+        position: relative;
+        max-width: 320px;
+    }
+    .search-input-wrap i {
+        position: absolute;
+        right: 0.85rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        font-size: 0.85rem;
+    }
+    .search-input-wrap input {
+        width: 100%;
+        padding: 0.55rem 2.2rem 0.55rem 0.85rem;
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-primary);
+        font-family: 'Tajawal', sans-serif;
+        font-size: 0.88rem;
+        transition: var(--transition-fast);
+    }
+    .search-input-wrap input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(230,0,0,0.1);
+    }
+    .search-input-wrap input::placeholder {
+        color: var(--text-muted);
+    }
+
+    /* ═══════════════════════════════════════
+       DATA TABLE
+    ═══════════════════════════════════════ */
+    .data-table-wrap {
+        overflow-x: auto;
+    }
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+    }
+    .data-table thead th {
+        padding: 0.85rem 1rem;
+        text-align: right;
+        font-weight: 600;
+        color: var(--text-muted);
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+        cursor: pointer;
+        user-select: none;
+        transition: var(--transition-fast);
+    }
+    .data-table thead th:hover {
+        color: var(--text-secondary);
+    }
+    .data-table thead th .sort-icon {
+        margin-right: 0.3rem;
+        font-size: 0.65rem;
+        opacity: 0.4;
+    }
+    .data-table thead th.sorted .sort-icon {
+        opacity: 1;
+        color: var(--primary);
+    }
+    .data-table tbody tr {
+        border-bottom: 1px solid var(--border);
+        transition: var(--transition-fast);
+    }
+    .data-table tbody tr:last-child { border-bottom: none; }
+    .data-table tbody tr:hover {
+        background: var(--bg-table-hover);
+    }
+    .data-table tbody td {
+        padding: 0.85rem 1rem;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+    .code-cell {
+        font-family: 'Courier New', monospace;
+        font-weight: 700;
+        letter-spacing: 1px;
+        direction: ltr;
+        text-align: left;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .code-copy-btn {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-size: 0.8rem;
+        padding: 0.2rem 0.35rem;
+        border-radius: 4px;
+        transition: var(--transition-fast);
+    }
+    .code-copy-btn:hover {
+        color: var(--primary);
+        background: rgba(230,0,0,0.08);
+    }
+    .code-copy-btn.copied { color: var(--success); }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.2rem 0.65rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    .status-badge.pending {
+        background: var(--warning-bg);
+        color: var(--warning);
+    }
+    .status-badge.approved {
+        background: var(--success-bg);
+        color: var(--success);
+    }
+    .status-badge.rejected {
+        background: var(--danger-bg);
+        color: var(--danger);
+    }
+    .status-badge.expired {
+        background: rgba(100,116,139,0.12);
+        color: #64748b;
+    }
+    .status-badge i { font-size: 0.55rem; }
+
+    /* ACTION BUTTONS */
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+        padding: 0.35rem 0.7rem;
+        border-radius: var(--radius-sm);
+        font-family: 'Tajawal', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        border: 1px solid transparent;
+        cursor: pointer;
+        transition: var(--transition-fast);
+        white-space: nowrap;
+    }
+    .action-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    .action-btn.approve {
+        background: var(--success-bg);
+        color: var(--success);
+        border-color: rgba(16,185,129,0.2);
+    }
+    .action-btn.approve:hover:not(:disabled) {
+        background: var(--success);
+        color: #fff;
+    }
+    .action-btn.reject {
+        background: var(--warning-bg);
+        color: var(--warning);
+        border-color: rgba(245,158,11,0.2);
+    }
+    .action-btn.reject:hover:not(:disabled) {
+        background: var(--warning);
+        color: #fff;
+    }
+    .action-btn.delete {
+        background: var(--danger-bg);
+        color: var(--danger);
+        border-color: rgba(239,68,68,0.2);
+    }
+    .action-btn.delete:hover:not(:disabled) {
+        background: var(--danger);
+        color: #fff;
+    }
+    .action-btn.expire {
+        background: rgba(100,116,139,0.1);
+        color: #64748b;
+        border-color: rgba(100,116,139,0.2);
+    }
+    .action-btn.expire:hover:not(:disabled) {
+        background: #64748b;
+        color: #fff;
+    }
+    .action-btn.info-btn {
+        background: var(--info-bg);
+        color: var(--info);
+        border-color: rgba(59,130,246,0.2);
+    }
+    .action-btn.info-btn:hover:not(:disabled) {
+        background: var(--info);
+        color: #fff;
+    }
+    .actions-cell {
+        display: flex;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+    }
+
+    /* ═══════════════════════════════════════
+       EMPTY STATE
+    ═══════════════════════════════════════ */
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+    }
+    .empty-icon {
+        width: 64px; height: 64px;
+        margin: 0 auto 1rem;
+        background: var(--bg-input);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: var(--text-muted);
+    }
+    .empty-state h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+        color: var(--text-secondary);
+    }
+    .empty-state p {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+
+    /* ═══════════════════════════════════════
+       MODAL (for coins, etc.)
+    ═══════════════════════════════════════ */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(6px);
+        z-index: 5000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        opacity: 0;
+        visibility: hidden;
+        transition: var(--transition-normal);
+    }
+    .modal-overlay.open { opacity: 1; visibility: visible; }
+    .modal-box {
+        background: linear-gradient(145deg, var(--bg-sidebar), var(--bg-body));
+        border: 1px solid var(--border);
+        border-radius: var(--radius-xl);
+        width: 100%;
+        max-width: 440px;
+        padding: 2rem;
+        transform: scale(0.9) translateY(20px);
+        transition: var(--transition-normal);
+        box-shadow: var(--shadow-lg);
+    }
+    .modal-overlay.open .modal-box {
+        transform: scale(1) translateY(0);
+    }
+    .modal-box h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    .modal-box p {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+    .modal-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: var(--bg-input);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-md);
+        color: var(--text-primary);
+        font-family: 'Tajawal', sans-serif;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        transition: var(--transition-fast);
+    }
+    .modal-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(230,0,0,0.1);
+    }
+    .modal-input::placeholder { color: var(--text-muted); }
+    .modal-buttons {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: flex-end;
+    }
+    .modal-btn {
+        padding: 0.6rem 1.3rem;
+        border-radius: var(--radius-sm);
+        font-family: 'Tajawal', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border: 1px solid var(--border);
+        cursor: pointer;
+        transition: var(--transition-fast);
+    }
+    .modal-btn.cancel {
+        background: transparent;
+        color: var(--text-secondary);
+    }
+    .modal-btn.cancel:hover { background: rgba(255,255,255,0.05); }
+    .modal-btn.confirm {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        border-color: var(--primary);
+        color: #fff;
+    }
+    .modal-btn.confirm:hover { box-shadow: var(--shadow-red); }
+    .modal-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    /* ═══════════════════════════════════════
+       TOAST
+    ═══════════════════════════════════════ */
+    .toast-container {
+        position: fixed;
+        top: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 99999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        pointer-events: none;
+        width: 90%;
+        max-width: 420px;
+    }
+    .toast {
+        pointer-events: auto;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border);
+        padding: 0.8rem 1.2rem;
+        border-radius: var(--radius-md);
+        color: #fff;
+        font-size: 0.88rem;
+        box-shadow: var(--shadow-md);
+        animation: toastIn 0.35s ease-out, toastOut 0.3s 2.7s ease-in forwards;
+        width: 100%;
+    }
+    .toast.success { border-color: rgba(16,185,129,0.3); }
+    .toast.success .toast-icon { color: var(--success); }
+    .toast.error { border-color: rgba(239,68,68,0.3); }
+    .toast.error .toast-icon { color: var(--danger); }
+    .toast.warning { border-color: rgba(245,158,11,0.3); }
+    .toast.warning .toast-icon { color: var(--warning); }
+    .toast.info { border-color: rgba(59,130,246,0.3); }
+    .toast.info .toast-icon { color: var(--info); }
+    .toast-icon { font-size: 1.05rem; flex-shrink: 0; }
+    @keyframes toastIn {
+        from{opacity:0;transform:translateY(-16px) scale(0.96)}
+        to{opacity:1;transform:translateY(0) scale(1)}
+    }
+    @keyframes toastOut {
+        from{opacity:1;transform:translateY(0) scale(1)}
+        to{opacity:0;transform:translateY(-16px) scale(0.96)}
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION PAGES (hide/show)
+    ═══════════════════════════════════════ */
+    .page-section { display: none; }
+    .page-section.active { display: block; }
+
+    /* ═══════════════════════════════════════
+       LOADING OVERLAY
+    ═══════════════════════════════════════ */
+    .table-loading {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-muted);
+    }
+    .table-loading .spinner {
+        width: 28px; height: 28px;
+        border-width: 2px;
+    }
+
+    /* ═══════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════ */
+    @media (max-width: 900px) {
+        .sidebar {
+            transform: translateX(100%);
+        }
+        .sidebar.open {
+            transform: translateX(0);
+        }
+        .sidebar-overlay.open { display: block; }
+        .mobile-menu-btn { display: flex; }
+        .main-content {
+            margin-right: 0;
+        }
+        .page-content { padding: 1rem; }
+        .stats-grid {
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 0.75rem;
+        }
+        .stat-card { padding: 1rem; }
+        .stat-value { font-size: 1.4rem; }
+    }
+
+    /* ═══════════════════════════════════════
+       SCROLLBAR
+    ═══════════════════════════════════════ */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+    html { scroll-behavior: smooth; }
+    ::selection { background: var(--primary); color: #fff; }
+
+    :focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+    button:focus:not(:focus-visible),
+    input:focus:not(:focus-visible) { outline: none; }
+    </style>
+</head>
+<body>
+
+    <!-- ░░░ Background ░░░ -->
+    <div class="bg-canvas">
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+    </div>
+    <div class="grid-overlay"></div>
+
+    <!-- ░░░ Toast Container ░░░ -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ═══════════════════════════════════════
+         AUTH SCREEN
+    ═══════════════════════════════════════ -->
+    <div class="auth-screen" id="authScreen">
+        <div class="bg-canvas">
+            <div class="bg-orb"></div>
+            <div class="bg-orb"></div>
+            <div class="bg-orb"></div>
+        </div>
+        <div class="grid-overlay"></div>
+        <div class="auth-card">
+            <div class="auth-logo">
+                <i class="fas fa-shield-halved"></i>
+            </div>
+            <h1>لوحة تحكم المسؤول</h1>
+            <p class="auth-subtitle">سجل دخولك بحساب جوجل للوصول إلى لوحة إدارة منصة كروت ڤودافون</p>
+            <button class="google-btn" id="authGoogleBtn">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                تسجيل الدخول بجوجل
+            </button>
+            <div class="auth-spinner" id="authSpinner">
+                <div class="spinner"></div>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.75rem;">
+                    جاري التحقق من الصلاحيات...
+                </p>
+            </div>
+            <div class="auth-denied" id="authDenied">
+                <i class="fas fa-ban" style="font-size: 1.3rem; display: block; margin-bottom: 0.5rem;"></i>
+                غير مصرح لك بالدخول
+            </div>
+            <button class="auth-signout-link" id="authSignoutLink" style="display:none;">
+                تسجيل الخروج والمحاولة بحساب آخر
+            </button>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+         APP LAYOUT (hidden until admin verified)
+    ═══════════════════════════════════════ -->
+    <div class="app-layout" id="appLayout">
+
+        <!-- MOBILE MENU BTN -->
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">VF</div>
+                <div class="sidebar-brand">
+                    <span class="sidebar-brand-title">Vodafone Admin</span>
+                    <span class="sidebar-brand-sub">لوحة التحكم</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label">القائمة الرئيسية</div>
+                <button class="sidebar-link active" data-page="dashboard">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>لوحة المعلومات</span>
+                </button>
+                <button class="sidebar-link" data-page="pending">
+                    <i class="fas fa-clock"></i>
+                    <span>كروت معلّقة</span>
+                    <span class="badge" id="pendingBadge">0</span>
+                </button>
+                <button class="sidebar-link" data-page="approved">
+                    <i class="fas fa-check-circle"></i>
+                    <span>كروت معتمدة</span>
+                </button>
+                <button class="sidebar-link" data-page="search">
+                    <i class="fas fa-search"></i>
+                    <span>بحث الكروت</span>
+                </button>
+
+                <div class="sidebar-section-label" style="margin-top: 0.5rem;">الإدارة</div>
+                <button class="sidebar-link" data-page="users">
+                    <i class="fas fa-users"></i>
+                    <span>إدارة المستخدمين</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <img class="sidebar-avatar" id="sidebarAvatar" src="" alt="admin" referrerpolicy="no-referrer">
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name" id="sidebarName">Admin</div>
+                    <div class="sidebar-user-role" id="sidebarRole">مسؤول</div>
+                </div>
+                <button class="sidebar-logout-btn" id="sidebarLogout" title="تسجيل الخروج">
+                    <i class="fas fa-arrow-right-from-bracket"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <header class="main-header">
+                <h2 class="header-title" id="headerTitle">لوحة المعلومات</h2>
+                <div class="header-actions">
+                    <button class="header-btn" id="refreshBtn" title="تحديث">
+                        <i class="fas fa-arrows-rotate"></i>
+                        تحديث
+                    </button>
+                    <button class="header-btn" id="exportBtn" title="تصدير CSV">
+                        <i class="fas fa-file-csv"></i>
+                        تصدير
+                    </button>
+                </div>
+            </header>
+
+            <div class="page-content">
+
+                <!-- ═══ DASHBOARD PAGE ═══ -->
+                <div class="page-section active" id="page-dashboard">
+                    <div class="stats-grid" id="statsGrid">
+                        <div class="stat-card">
+                            <div class="stat-icon red"><i class="fas fa-credit-card"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-label">إجمالي الكروت</div>
+                                <div class="stat-value" id="statTotal">0</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon yellow"><i class="fas fa-hourglass-half"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-label">كروت معلّقة</div>
+                                <div class="stat-value" id="statPending">0</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-label">كروت معتمدة</div>
+                                <div class="stat-value" id="statApproved">0</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon blue"><i class="fas fa-times-circle"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-label">كروت مرفوضة</div>
+                                <div class="stat-value" id="statRejected">0</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon purple"><i class="fas fa-users"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-label">إجمالي المستخدمين</div>
+                                <div class="stat-value" id="statUsers">0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent pending cards quick view -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i class="fas fa-clock"></i>
+                                آخر الكروت المعلّقة
+                                <span class="count-badge" id="dashPendingCount">0</span>
+                            </div>
+                            <button class="header-btn" onclick="navigateTo('pending')">
+                                عرض الكل <i class="fas fa-arrow-left" style="font-size:0.7rem"></i>
+                            </button>
+                        </div>
+                        <div class="panel-body">
+                            <div class="data-table-wrap">
+                                <table class="data-table" id="dashPendingTable">
+                                    <thead>
+                                        <tr>
+                                            <th>الكود</th>
+                                            <th>الوحدات</th>
+                                            <th>المستخدم</th>
+                                            <th>الوقت</th>
+                                            <th>إجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dashPendingBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ PENDING CARDS PAGE ═══ -->
+                <div class="page-section" id="page-pending">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i class="fas fa-clock"></i>
+                                مراجعة الكروت المعلّقة
+                                <span class="count-badge" id="pendingPageCount">0</span>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="data-table-wrap">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>الكود</th>
+                                            <th>الوحدات</th>
+                                            <th>الشبكة</th>
+                                            <th>المستخدم</th>
+                                            <th>وقت الإرسال</th>
+                                            <th>إجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="pendingBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ APPROVED CARDS PAGE ═══ -->
+                <div class="page-section" id="page-approved">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i class="fas fa-check-circle"></i>
+                                الكروت المعتمدة
+                                <span class="count-badge" id="approvedPageCount">0</span>
+                            </div>
+                            <div class="panel-actions">
+                                <div class="search-input-wrap">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="approvedSearchInput" placeholder="بحث بالكود أو الوحدات...">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="data-table-wrap">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th data-sort="code">الكود <i class="fas fa-sort sort-icon"></i></th>
+                                            <th data-sort="units">الوحدات <i class="fas fa-sort sort-icon"></i></th>
+                                            <th>الشبكة</th>
+                                            <th>المستخدم</th>
+                                            <th data-sort="date">التاريخ <i class="fas fa-sort sort-icon"></i></th>
+                                            <th>انتهاء الصلاحية</th>
+                                            <th>إجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="approvedBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ SEARCH CARDS PAGE ═══ -->
+                <div class="page-section" id="page-search">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i class="fas fa-search"></i>
+                                بحث شامل في الكروت
+                            </div>
+                        </div>
+                        <div class="panel-body padded">
+                            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                                <div class="search-input-wrap" style="flex:1; min-width: 200px; max-width: none;">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="globalSearchInput" placeholder="ابحث بالكود، الوحدات، أو معرّف المستخدم...">
+                                </div>
+                                <select id="globalSearchStatus" style="
+                                    padding: 0.55rem 1rem;
+                                    background: var(--bg-input);
+                                    border: 1px solid var(--border);
+                                    border-radius: var(--radius-sm);
+                                    color: var(--text-primary);
+                                    font-family: 'Tajawal', sans-serif;
+                                    font-size: 0.88rem;
+                                    cursor: pointer;
+                                ">
+                                    <option value="all">كل الحالات</option>
+                                    <option value="pending">معلّقة</option>
+                                    <option value="approved">معتمدة</option>
+                                    <option value="rejected">مرفوضة</option>
+                                </select>
+                            </div>
+                            <div class="data-table-wrap">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>الكود</th>
+                                            <th>الوحدات</th>
+                                            <th>الحالة</th>
+                                            <th>الشبكة</th>
+                                            <th>المستخدم</th>
+                                            <th>التاريخ</th>
+                                            <th>إجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="searchBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ USERS PAGE ═══ -->
+                <div class="page-section" id="page-users">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i class="fas fa-users"></i>
+                                إدارة المستخدمين
+                                <span class="count-badge" id="usersPageCount">0</span>
+                            </div>
+                            <div class="panel-actions">
+                                <div class="search-input-wrap">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="usersSearchInput" placeholder="بحث بالاسم أو البريد...">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="data-table-wrap">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>الاسم</th>
+                                            <th>البريد الإلكتروني</th>
+                                            <th>العملات</th>
+                                            <th>تاريخ التسجيل</th>
+                                            <th>إجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="usersBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /page-content -->
+        </div><!-- /main-content -->
+    </div><!-- /app-layout -->
+
+    <!-- ═══ COINS MODAL ═══ -->
+    <div class="modal-overlay" id="coinsModal">
+        <div class="modal-box">
+            <h3 id="coinsModalTitle">تعديل العملات</h3>
+            <p id="coinsModalDesc">أدخل عدد العملات لإضافتها أو خصمها</p>
+            <input type="number" class="modal-input" id="coinsInput" placeholder="عدد العملات (موجب للإضافة، سالب للخصم)" min="-99999" max="99999">
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" id="coinsCancel">إلغاء</button>
+                <button class="modal-btn confirm" id="coinsConfirm">تأكيد</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ CONFIRM DELETE MODAL ═══ -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-box">
+            <h3 id="confirmTitle">تأكيد الحذف</h3>
+            <p id="confirmDesc">هل أنت متأكد من حذف هذا العنصر؟ لا يمكن التراجع عن هذا الإجراء.</p>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" id="confirmCancel">إلغاء</button>
+                <button class="modal-btn confirm" id="confirmOk" style="background: var(--danger); border-color: var(--danger);">حذف</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════
+         JAVASCRIPT — ES MODULES
+    ═══════════════════════════════════════ -->
+    <script type="module">
+
+    /* ═══════════════════════════════════════
+       §1. FIREBASE INITIALIZATION
+    ═══════════════════════════════════════ */
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+    import {
+        getFirestore,
+        collection,
+        query,
+        where,
+        orderBy,
+        limit,
+        onSnapshot,
+        getDocs,
+        getDoc,
+        doc,
+        updateDoc,
+        deleteDoc,
+        serverTimestamp,
+        Timestamp
+    } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+    import {
+        getAuth,
+        GoogleAuthProvider,
+        signInWithPopup,
+        signOut,
+        onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyArjc4iLYD0VcP4SvdvUpwI4zwLKpOxAVY",
+        authDomain: "veow-app.firebaseapp.com",
+        projectId: "veow-app",
+        storageBucket: "veow-app.firebasestorage.app",
+        messagingSenderId: "868100436269",
+        appId: "1:868100436269:web:194b4a6b4f42bda53aa3a4",
+        measurementId: "G-GZ44BE2F8E"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const googleProvider = new GoogleAuthProvider();
+
+    /* ═══════════════════════════════════════
+       §2. STATE
+    ═══════════════════════════════════════ */
+    let currentUser = null;
+    let adminData = null;
+    let allCards = [];
+    let allUsers = [];
+    let unsubCards = null;
+    let unsubUsers = null;
+
+    // Approved cards sorting
+    let approvedSort = { field: 'date', dir: 'desc' };
+
+    /* ═══════════════════════════════════════
+       §3. DOM REFS
+    ═══════════════════════════════════════ */
+    const $ = s => document.querySelector(s);
+    const $$ = s => document.querySelectorAll(s);
+
+    const authScreen = $('#authScreen');
+    const authGoogleBtn = $('#authGoogleBtn');
+    const authSpinner = $('#authSpinner');
+    const authDenied = $('#authDenied');
+    const authSignoutLink = $('#authSignoutLink');
+    const appLayout = $('#appLayout');
+    const toastContainer = $('#toastContainer');
+
+    // Sidebar
+    const sidebar = $('#sidebar');
+    const mobileMenuBtn = $('#mobileMenuBtn');
+    const sidebarOverlay = $('#sidebarOverlay');
+    const sidebarLogout = $('#sidebarLogout');
+    const sidebarAvatar = $('#sidebarAvatar');
+    const sidebarName = $('#sidebarName');
+    const sidebarRole = $('#sidebarRole');
+
+    // Header
+    const headerTitle = $('#headerTitle');
+    const refreshBtn = $('#refreshBtn');
+    const exportBtn = $('#exportBtn');
+
+    // Stats
+    const statTotal = $('#statTotal');
+    const statPending = $('#statPending');
+    const statApproved = $('#statApproved');
+    const statRejected = $('#statRejected');
+    const statUsers = $('#statUsers');
+
+    // Modals
+    const coinsModal = $('#coinsModal');
+    const coinsInput = $('#coinsInput');
+    const coinsCancel = $('#coinsCancel');
+    const coinsConfirm = $('#coinsConfirm');
+    const coinsModalTitle = $('#coinsModalTitle');
+    const confirmModal = $('#confirmModal');
+    const confirmTitle = $('#confirmTitle');
+    const confirmDesc = $('#confirmDesc');
+    const confirmCancel = $('#confirmCancel');
+    const confirmOk = $('#confirmOk');
+
+    /* ═══════════════════════════════════════
+       §4. TOAST
+    ═══════════════════════════════════════ */
+    function toast(message, type = 'info') {
+        const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle', warning:'fa-exclamation-triangle' };
+        const el = document.createElement('div');
+        el.className = `toast ${type}`;
+        el.innerHTML = `<i class="fas ${icons[type]} toast-icon"></i><span>${message}</span>`;
+        toastContainer.appendChild(el);
+        setTimeout(() => el.remove(), 3200);
+    }
+
+    /* ═══════════════════════════════════════
+       §5. AUTHENTICATION & ADMIN VERIFICATION
+    ═══════════════════════════════════════ */
+    function showAuthScreen() {
+        authScreen.style.display = 'flex';
+        appLayout.classList.remove('visible');
+    }
+
+    function hideAuthScreen() {
+        authScreen.style.display = 'none';
+        appLayout.classList.add('visible');
+    }
+
+    async function checkAdmin(user) {
+        try {
+            // Query admins collection where email matches
+            const adminsQuery = query(
+                collection(db, 'admins'),
+                where('email', '==', user.email)
+            );
+            const snapshot = await getDocs(adminsQuery);
+
+            if (!snapshot.empty) {
+                const adminDoc = snapshot.docs[0];
+                return { id: adminDoc.id, ...adminDoc.data() };
+            }
+            return null;
+        } catch (error) {
+            console.error('Admin check error:', error);
+            return null;
+        }
+    }
+
+    async function handleSignIn() {
+        try {
+            authGoogleBtn.disabled = true;
+            authGoogleBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري تسجيل الدخول...';
+            await signInWithPopup(auth, googleProvider);
+        } catch (error) {
+            if (error.code !== 'auth/popup-closed-by-user') {
+                toast('حدث خطأ أثناء تسجيل الدخول', 'error');
+            }
+        } finally {
+            authGoogleBtn.disabled = false;
+            authGoogleBtn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> تسجيل الدخول بجوجل';
+        }
+    }
+
+    async function handleSignOut() {
+        try {
+            // Unsubscribe from realtime listeners
+            if (unsubCards) { unsubCards(); unsubCards = null; }
+            if (unsubUsers) { unsubUsers(); unsubUsers = null; }
+            await signOut(auth);
+            adminData = null;
+            allCards = [];
+            allUsers = [];
+            authDenied.classList.remove('show');
+            authSignoutLink.style.display = 'none';
+            showAuthScreen();
+        } catch (error) {
+            toast('خطأ أثناء تسجيل الخروج', 'error');
+        }
+    }
+
+    authGoogleBtn.addEventListener('click', handleSignIn);
+    authSignoutLink.addEventListener('click', handleSignOut);
+    sidebarLogout.addEventListener('click', handleSignOut);
+
+    // Auth state observer
+    onAuthStateChanged(auth, async (user) => {
+        currentUser = user;
+
+        if (!user) {
+            showAuthScreen();
+            return;
+        }
+
+        // Show spinner while checking admin
+        authGoogleBtn.style.display = 'none';
+        authSpinner.classList.add('show');
+        authDenied.classList.remove('show');
+        authSignoutLink.style.display = 'none';
+
+        const admin = await checkAdmin(user);
+
+        authSpinner.classList.remove('show');
+
+        if (!admin) {
+            // Not an admin
+            authDenied.classList.add('show');
+            authSignoutLink.style.display = 'inline-block';
+            authGoogleBtn.style.display = '';
+            return;
+        }
+
+        // Admin verified!
+        adminData = admin;
+        setupAdminUI(user, admin);
+        hideAuthScreen();
+        startRealtimeListeners();
+    });
+
+    /* ═══════════════════════════════════════
+       §6. ADMIN UI SETUP
+    ═══════════════════════════════════════ */
+    function setupAdminUI(user, admin) {
+        sidebarAvatar.src = user.photoURL || '';
+        sidebarName.textContent = user.displayName || user.email;
+        sidebarRole.textContent = admin.role || 'مسؤول';
+    }
+
+    /* ═══════════════════════════════════════
+       §7. SIDEBAR NAVIGATION
+    ═══════════════════════════════════════ */
+    const pageTitles = {
+        dashboard: 'لوحة المعلومات',
+        pending: 'مراجعة الكروت المعلّقة',
+        approved: 'الكروت المعتمدة',
+        search: 'بحث الكروت',
+        users: 'إدارة المستخدمين'
+    };
+
+    function navigateTo(page) {
+        // Update sidebar
+        $$('.sidebar-link').forEach(l => l.classList.remove('active'));
+        const activeLink = $(`.sidebar-link[data-page="${page}"]`);
+        if (activeLink) activeLink.classList.add('active');
+
+        // Update pages
+        $$('.page-section').forEach(s => s.classList.remove('active'));
+        const activePage = $(`#page-${page}`);
+        if (activePage) activePage.classList.add('active');
+
+        // Update header
+        headerTitle.textContent = pageTitles[page] || page;
+
+        // Close mobile sidebar
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('open');
+    }
+
+    // Make navigateTo global for inline onclick
+    window.navigateTo = navigateTo;
+
+    $$('.sidebar-link').forEach(link => {
+        link.addEventListener('click', () => {
+            const page = link.dataset.page;
+            if (page) navigateTo(page);
+        });
+    });
+
+    // Mobile sidebar
+    mobileMenuBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+        sidebarOverlay.classList.toggle('open');
+    });
+    sidebarOverlay.addEventListener('click', () => {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('open');
+    });
+
+    /* ═══════════════════════════════════════
+       §8. REALTIME FIRESTORE LISTENERS
+    ═══════════════════════════════════════ */
+    function startRealtimeListeners() {
+        // ─── Cards listener (all cards) ───
+        const cardsQuery = query(
+            collection(db, 'cards'),
+            orderBy('createdAt', 'desc')
+        );
+
+        unsubCards = onSnapshot(cardsQuery, (snapshot) => {
+            allCards = [];
+            snapshot.forEach(docSnap => {
+                allCards.push({ id: docSnap.id, ...docSnap.data() });
+            });
+            updateStats();
+            renderCurrentPage();
+        }, (error) => {
+            console.error('Cards listener error:', error);
+            toast('خطأ في تحميل الكروت', 'error');
+        });
+
+        // ─── Users listener ───
+        const usersQuery = query(
+            collection(db, 'users'),
+            orderBy('createdAt', 'desc')
+        );
+
+        unsubUsers = onSnapshot(usersQuery, (snapshot) => {
+            allUsers = [];
+            snapshot.forEach(docSnap => {
+                allUsers.push({ id: docSnap.id, ...docSnap.data() });
+            });
+            statUsers.textContent = allUsers.length;
+            $('#usersPageCount').textContent = allUsers.length;
+            renderUsersTable();
+        }, (error) => {
+            console.error('Users listener error:', error);
+        });
+    }
+
+    /* ═══════════════════════════════════════
+       §9. DASHBOARD STATS
+    ═══════════════════════════════════════ */
+    function updateStats() {
+        const pending = allCards.filter(c => c.status === 'pending');
+        const approved = allCards.filter(c => c.status === 'approved');
+        const rejected = allCards.filter(c => c.status === 'rejected');
+
+        statTotal.textContent = allCards.length;
+        statPending.textContent = pending.length;
+        statApproved.textContent = approved.length;
+        statRejected.textContent = rejected.length;
+
+        // Badge in sidebar
+        $('#pendingBadge').textContent = pending.length;
+        $('#dashPendingCount').textContent = pending.length;
+        $('#pendingPageCount').textContent = pending.length;
+        $('#approvedPageCount').textContent = approved.length;
+    }
+
+    function renderCurrentPage() {
+        const activePage = $('.page-section.active');
+        if (!activePage) return;
+        const pageId = activePage.id.replace('page-', '');
+
+        switch (pageId) {
+            case 'dashboard': renderDashPending(); break;
+            case 'pending': renderPendingTable(); break;
+            case 'approved': renderApprovedTable(); break;
+            case 'search': renderSearchResults(); break;
+        }
+    }
+
+    /* ═══════════════════════════════════════
+       §10. HELPER: FORMAT TIME
+    ═══════════════════════════════════════ */
+    function formatDate(ts) {
+        if (!ts) return '—';
+        const d = ts.toDate ? ts.toDate() : new Date(ts);
+        return d.toLocaleDateString('ar-EG', {
+            year: 'numeric', month: 'short', day: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
+    }
+
+    function timeAgo(ts) {
+        if (!ts) return '—';
+        const d = ts.toDate ? ts.toDate() : new Date(ts);
+        const diff = Date.now() - d.getTime();
+        const mins = Math.floor(diff / 60000);
+        if (mins < 1) return 'الآن';
+        if (mins < 60) return `منذ ${mins} دقيقة`;
+        const hours = Math.floor(mins / 60);
+        if (hours < 24) return `منذ ${hours} ساعة`;
+        const days = Math.floor(hours / 24);
+        return `منذ ${days} يوم`;
+    }
+
+    function getUserName(uid) {
+        if (!uid) return '—';
+        const user = allUsers.find(u => u.id === uid);
+        return user ? (user.name || user.email || uid) : uid.substring(0, 10) + '...';
+    }
+
+    /* ═══════════════════════════════════════
+       §11. COPY CODE HELPER
+    ═══════════════════════════════════════ */
+    function copyCode(code, btn) {
+        navigator.clipboard.writeText(code).then(() => {
+            btn.classList.add('copied');
+            btn.innerHTML = '<i class="fas fa-check"></i>';
+            toast('تم نسخ الكود', 'success');
+            setTimeout(() => {
+                btn.classList.remove('copied');
+                btn.innerHTML = '<i class="fas fa-copy"></i>';
+            }, 2000);
+        }).catch(() => {
+            // Fallback
+            const ta = document.createElement('textarea');
+            ta.value = code;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            toast('تم نسخ الكود', 'success');
+        });
+    }
+
+    /* ═══════════════════════════════════════
+       §12. CARD ACTIONS
+    ═══════════════════════════════════════ */
+    async function approveCard(cardId) {
+        try {
+            await updateDoc(doc(db, 'cards', cardId), {
+                status: 'approved'
+            });
+            toast('تم اعتماد الكارت', 'success');
+        } catch (err) {
+            console.error(err);
+            toast('خطأ في اعتماد الكارت', 'error');
+        }
+    }
+
+    async function rejectCard(cardId) {
+        try {
+            await updateDoc(doc(db, 'cards', cardId), {
+                status: 'rejected'
+            });
+            toast('تم رفض الكارت', 'warning');
+        } catch (err) {
+            console.error(err);
+            toast('خطأ في رفض الكارت', 'error');
+        }
+    }
+
+    async function expireCard(cardId) {
+        try {
+            await updateDoc(doc(db, 'cards', cardId), {
+                expiresAt: Timestamp.now()
+            });
+            toast('تم انتهاء صلاحية الكارت', 'info');
+        } catch (err) {
+            console.error(err);
+            toast('خطأ', 'error');
+        }
+    }
+
+    // Delete with confirmation
+    let pendingDeleteId = null;
+    let pendingDeleteType = 'card';
+
+    function requestDelete(id, type = 'card') {
+        pendingDeleteId = id;
+        pendingDeleteType = type;
+        confirmTitle.textContent = type === 'card' ? 'حذف الكارت' : 'حذف المستخدم';
+        confirmDesc.textContent = 'هل أنت متأكد؟ لا يمكن التراجع عن هذا الإجراء.';
+        confirmModal.classList.add('open');
+    }
+
+    confirmCancel.addEventListener('click', () => {
+        confirmModal.classList.remove('open');
+        pendingDeleteId = null;
+    });
+    confirmModal.addEventListener('click', (e) => {
+        if (e.target === confirmModal) {
+            confirmModal.classList.remove('open');
+            pendingDeleteId = null;
+        }
+    });
+
+    confirmOk.addEventListener('click', async () => {
+        if (!pendingDeleteId) return;
+        confirmOk.disabled = true;
+        try {
+            const col = pendingDeleteType === 'card' ? 'cards' : 'users';
+            await deleteDoc(doc(db, col, pendingDeleteId));
+            toast('تم الحذف بنجاح', 'success');
+        } catch (err) {
+            console.error(err);
+            toast('خطأ في الحذف', 'error');
+        } finally {
+            confirmOk.disabled = false;
+            confirmModal.classList.remove('open');
+            pendingDeleteId = null;
+        }
+    });
+
+    /* ═══════════════════════════════════════
+       §13. RENDER: DASHBOARD PENDING TABLE
+    ═══════════════════════════════════════ */
+    function renderDashPending() {
+        const body = $('#dashPendingBody');
+        const pending = allCards.filter(c => c.status === 'pending').slice(0, 5);
+
+        if (pending.length === 0) {
+            body.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon"><i class="fas fa-inbox"></i></div><h4>لا توجد كروت معلّقة</h4><p>جميع الكروت تمت مراجعتها</p></div></td></tr>`;
+            return;
+        }
+
+        body.innerHTML = pending.map(card => `
+            <tr>
+                <td>
+                    <span class="code-cell">
+                        ${card.code || '—'}
+                        <button class="code-copy-btn" data-code="${card.code}" title="نسخ"><i class="fas fa-copy"></i></button>
+                    </span>
+                </td>
+                <td>${card.units || 0}</td>
+                <td>${getUserName(card.addedBy)}</td>
+                <td>${timeAgo(card.createdAt)}</td>
+                <td>
+                    <div class="actions-cell">
+                        <button class="action-btn approve" data-id="${card.id}" data-action="approve"><i class="fas fa-check"></i> اعتماد</button>
+                        <button class="action-btn reject" data-id="${card.id}" data-action="reject"><i class="fas fa-times"></i> رفض</button>
+                        <button class="action-btn delete" data-id="${card.id}" data-action="delete"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+
+        attachCardActions(body);
+        attachCopyButtons(body);
+    }
+
+    /* ═══════════════════════════════════════
+       §14. RENDER: FULL PENDING TABLE
+    ═══════════════════════════════════════ */
+    function renderPendingTable() {
+        const body = $('#pendingBody');
+        const pending = allCards.filter(c => c.status === 'pending');
+
+        if (pending.length === 0) {
+            body.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon"><i class="fas fa-check-double"></i></div><h4>لا توجد كروت معلّقة</h4><p>تمت مراجعة جميع الكروت</p></div></td></tr>`;
+            return;
+        }
+
+        body.innerHTML = pending.map(card => `
+            <tr>
+                <td>
+                    <span class="code-cell">
+                        ${card.code || '—'}
+                        <button class="code-copy-btn" data-code="${card.code}" title="نسخ"><i class="fas fa-copy"></i></button>
+                    </span>
+                </td>
+                <td>${card.units || 0}</td>
+                <td>${card.network || 'vodafone'}</td>
+                <td>${getUserName(card.addedBy)}</td>
+                <td>${formatDate(card.createdAt)}</td>
+                <td>
+                    <div class="actions-cell">
+                        <button class="action-btn approve" data-id="${card.id}" data-action="approve"><i class="fas fa-check"></i> اعتماد</button>
+                        <button class="action-btn reject" data-id="${card.id}" data-action="reject"><i class="fas fa-times"></i> رفض</button>
+                        <button class="action-btn delete" data-id="${card.id}" data-action="delete"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+
+        attachCardActions(body);
+        attachCopyButtons(body);
+    }
+
+    /* ═══════════════════════════════════════
+       §15. RENDER: APPROVED TABLE
+    ═══════════════════════════════════════ */
+    function renderApprovedTable() {
+        const body = $('#approvedBody');
+        const searchVal = ($('#approvedSearchInput')?.value || '').trim().toLowerCase();
+        let approved = allCards.filter(c => c.status === 'approved');
+
+        // Search filter
+        if (searchVal) {
+            approved = approved.filter(c =>
+                (c.code || '').includes(searchVal) ||
+                String(c.units || '').includes(searchVal) ||
+                getUserName(c.addedBy).toLowerCase().includes(searchVal)
+            );
+        }
+
+        // Sort
+        approved.sort((a, b) => {
+            let va, vb;
+            switch (approvedSort.field) {
+                case 'code':
+                    va = a.code || ''; vb = b.code || '';
+                    break;
+                case 'units':
+                    va = a.units || 0; vb = b.units || 0;
+                    break;
+                case 'date':
+                default:
+                    va = a.createdAt?.toDate?.()?.getTime() || 0;
+                    vb = b.createdAt?.toDate?.()?.getTime() || 0;
+            }
+            if (approvedSort.dir === 'asc') return va > vb ? 1 : -1;
+            return va < vb ? 1 : -1;
+        });
+
+        if (approved.length === 0) {
+            body.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-icon"><i class="fas fa-inbox"></i></div><h4>لا توجد كروت معتمدة</h4></div></td></tr>`;
+            return;
+        }
+
+        body.innerHTML = approved.map(card => `
+            <tr>
+                <td>
+                    <span class="code-cell">
+                        ${card.code || '—'}
+                        <button class="code-copy-btn" data-code="${card.code}" title="نسخ"><i class="fas fa-copy"></i></button>
+                    </span>
+                </td>
+                <td>${card.units || 0}</td>
+                <td>${card.network || 'vodafone'}</td>
+                <td>${getUserName(card.addedBy)}</td>
+                <td>${formatDate(card.createdAt)}</td>
+                <td>${formatDate(card.expiresAt)}</td>
+                <td>
+                    <div class="actions-cell">
+                        <button class="action-btn expire" data-id="${card.id}" data-action="expire"><i class="fas fa-hourglass-end"></i> انتهاء</button>
+                        <button class="action-btn delete" data-id="${card.id}" data-action="delete"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+
+        attachCardActions(body);
+        attachCopyButtons(body);
+    }
+
+    // Approved search
+    $('#approvedSearchInput')?.addEventListener('input', renderApprovedTable);
+
+    // Approved sort
+    $$('#page-approved th[data-sort]').forEach(th => {
+        th.addEventListener('click', () => {
+            const field = th.dataset.sort;
+            if (approvedSort.field === field) {
+                approvedSort.dir = approvedSort.dir === 'asc' ? 'desc' : 'asc';
+            } else {
+                approvedSort.field = field;
+                approvedSort.dir = 'desc';
+            }
+            // Update sort icons
+            $$('#page-approved th[data-sort]').forEach(t => t.classList.remove('sorted'));
+            th.classList.add('sorted');
+            const icon = th.querySelector('.sort-icon');
+            if (icon) icon.className = `fas fa-sort-${approvedSort.dir === 'asc' ? 'up' : 'down'} sort-icon`;
+            renderApprovedTable();
+        });
+    });
+
+    /* ═══════════════════════════════════════
+       §16. RENDER: SEARCH RESULTS
+    ═══════════════════════════════════════ */
+    function renderSearchResults() {
+        const body = $('#searchBody');
+        const searchVal = ($('#globalSearchInput')?.value || '').trim().toLowerCase();
+        const statusFilter = $('#globalSearchStatus')?.value || 'all';
+
+        let filtered = [...allCards];
+
+        if (statusFilter !== 'all') {
+            filtered = filtered.filter(c => c.status === statusFilter);
+        }
+
+        if (searchVal) {
+            filtered = filtered.filter(c =>
+                (c.code || '').includes(searchVal) ||
+                String(c.units || '').includes(searchVal) ||
+                (c.addedBy || '').toLowerCase().includes(searchVal) ||
+                getUserName(c.addedBy).toLowerCase().includes(searchVal)
+            );
+        }
+
+        if (filtered.length === 0) {
+            body.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-icon"><i class="fas fa-search"></i></div><h4>لا توجد نتائج</h4><p>جرب البحث بكلمات مختلفة</p></div></td></tr>`;
+            return;
+        }
+
+        body.innerHTML = filtered.slice(0, 100).map(card => {
+            const statusMap = {
+                pending: { label: 'معلّقة', icon: 'fa-clock', cls: 'pending' },
+                approved: { label: 'معتمدة', icon: 'fa-check', cls: 'approved' },
+                rejected: { label: 'مرفوضة', icon: 'fa-times', cls: 'rejected' }
+            };
+            const st = statusMap[card.status] || statusMap.pending;
+
+            return `
+            <tr>
+                <td>
+                    <span class="code-cell">
+                        ${card.code || '—'}
+                        <button class="code-copy-btn" data-code="${card.code}" title="نسخ"><i class="fas fa-copy"></i></button>
+                    </span>
+                </td>
+                <td>${card.units || 0}</td>
+                <td><span class="status-badge ${st.cls}"><i class="fas ${st.icon}"></i> ${st.label}</span></td>
+                <td>${card.network || 'vodafone'}</td>
+                <td>${getUserName(card.addedBy)}</td>
+                <td>${formatDate(card.createdAt)}</td>
+                <td>
+                    <div class="actions-cell">
+                        ${card.status === 'pending' ? `
+                            <button class="action-btn approve" data-id="${card.id}" data-action="approve"><i class="fas fa-check"></i></button>
+                            <button class="action-btn reject" data-id="${card.id}" data-action="reject"><i class="fas fa-times"></i></button>
+                        ` : ''}
+                        <button class="action-btn delete" data-id="${card.id}" data-action="delete"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>
+        `}).join('');
+
+        attachCardActions(body);
+        attachCopyButtons(body);
+    }
+
+    $('#globalSearchInput')?.addEventListener('input', renderSearchResults);
+    $('#globalSearchStatus')?.addEventListener('change', renderSearchResults);
+
+    /* ═══════════════════════════════════════
+       §17. RENDER: USERS TABLE
+    ═══════════════════════════════════════ */
+    function renderUsersTable() {
+        const body = $('#usersBody');
+        const searchVal = ($('#usersSearchInput')?.value || '').trim().toLowerCase();
+
+        let filtered = [...allUsers];
+        if (searchVal) {
+            filtered = filtered.filter(u =>
+                (u.name || '').toLowerCase().includes(searchVal) ||
+                (u.email || '').toLowerCase().includes(searchVal)
+            );
+        }
+
+        if (filtered.length === 0) {
+            body.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon"><i class="fas fa-users"></i></div><h4>لا يوجد مستخدمون</h4></div></td></tr>`;
+            return;
+        }
+
+        body.innerHTML = filtered.map(user => `
+            <tr>
+                <td style="font-weight:600">${user.name || '—'}</td>
+                <td style="direction:ltr; text-align:right; color: var(--text-secondary); font-size:0.85rem">${user.email || '—'}</td>
+                <td>
+                    <span style="display:inline-flex;align-items:center;gap:0.3rem;color:var(--gold);font-weight:700;">
+                        <i class="fas fa-coins" style="font-size:0.75rem"></i>
+                        ${user.coins || 0}
+                    </span>
+                </td>
+                <td>${formatDate(user.createdAt)}</td>
+                <td>
+                    <div class="actions-cell">
+                        <button class="action-btn info-btn" data-uid="${user.id}" data-action="addCoins"><i class="fas fa-plus"></i> إضافة عملات</button>
+                        <button class="action-btn reject" data-uid="${user.id}" data-action="removeCoins"><i class="fas fa-minus"></i> خصم</button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+
+        attachUserActions(body);
+    }
+
+    $('#usersSearchInput')?.addEventListener('input', renderUsersTable);
+
+    /* ═══════════════════════════════════════
+       §18. ACTION EVENT DELEGATION
+    ═══════════════════════════════════════ */
+    function attachCardActions(container) {
+        container.querySelectorAll('[data-action]').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const action = btn.dataset.action;
+                const id = btn.dataset.id;
+                if (!id) return;
+
+                btn.disabled = true;
+
+                switch (action) {
+                    case 'approve': await approveCard(id); break;
+                    case 'reject': await rejectCard(id); break;
+                    case 'expire': await expireCard(id); break;
+                    case 'delete': requestDelete(id, 'card'); break;
+                }
+
+                btn.disabled = false;
+            });
+        });
+    }
+
+    function attachCopyButtons(container) {
+        container.querySelectorAll('.code-copy-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                copyCode(btn.dataset.code, btn);
+            });
+        });
+    }
+
+    // Coins modal state
+    let coinsTargetUid = null;
+    let coinsAction = 'add'; // 'add' or 'remove'
+
+    function attachUserActions(container) {
+        container.querySelectorAll('[data-action]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const uid = btn.dataset.uid;
+                const action = btn.dataset.action;
+                if (!uid) return;
+
+                coinsTargetUid = uid;
+                const user = allUsers.find(u => u.id === uid);
+                const name = user?.name || user?.email || uid;
+
+                if (action === 'addCoins') {
+                    coinsAction = 'add';
+                    coinsModalTitle.textContent = `إضافة عملات — ${name}`;
+                    $('#coinsModalDesc').textContent = 'أدخل عدد العملات المراد إضافتها';
+                    coinsInput.min = '1';
+                    coinsInput.placeholder = 'مثال: 50';
+                } else {
+                    coinsAction = 'remove';
+                    coinsModalTitle.textContent = `خصم عملات — ${name}`;
+                    $('#coinsModalDesc').textContent = `الرصيد الحالي: ${user?.coins || 0} عملة`;
+                    coinsInput.min = '1';
+                    coinsInput.placeholder = 'عدد العملات المراد خصمها';
+                }
+                coinsInput.value = '';
+                coinsModal.classList.add('open');
+                setTimeout(() => coinsInput.focus(), 300);
+            });
+        });
+    }
+
+    coinsCancel.addEventListener('click', () => {
+        coinsModal.classList.remove('open');
+        coinsTargetUid = null;
+    });
+    coinsModal.addEventListener('click', (e) => {
+        if (e.target === coinsModal) {
+            coinsModal.classList.remove('open');
+            coinsTargetUid = null;
+        }
+    });
+
+    coinsConfirm.addEventListener('click', async () => {
+        if (!coinsTargetUid) return;
+        const val = parseInt(coinsInput.value);
+        if (isNaN(val) || val <= 0) {
+            toast('أدخل رقمًا صحيحًا أكبر من صفر', 'warning');
+            return;
+        }
+
+        coinsConfirm.disabled = true;
+        try {
+            const userRef = doc(db, 'users', coinsTargetUid);
+            const userSnap = await getDoc(userRef);
+            if (!userSnap.exists()) {
+                toast('المستخدم غير موجود', 'error');
+                return;
+            }
+
+            const currentCoins = userSnap.data().coins || 0;
+            let newCoins;
+
+            if (coinsAction === 'add') {
+                newCoins = currentCoins + val;
+                toast(`تم إضافة ${val} عملة`, 'success');
+            } else {
+                newCoins = Math.max(0, currentCoins - val);
+                toast(`تم خصم ${val} عملة`, 'success');
+            }
+
+            await updateDoc(userRef, { coins: newCoins });
+        } catch (err) {
+            console.error(err);
+            toast('خطأ في تعديل العملات', 'error');
+        } finally {
+            coinsConfirm.disabled = false;
+            coinsModal.classList.remove('open');
+            coinsTargetUid = null;
+        }
+    });
+
+    /* ═══════════════════════════════════════
+       §19. REFRESH BUTTON
+    ═══════════════════════════════════════ */
+    refreshBtn.addEventListener('click', () => {
+        const icon = refreshBtn.querySelector('i');
+        icon.classList.add('fa-spin');
+        // Force re-render
+        updateStats();
+        renderCurrentPage();
+        renderUsersTable();
+        setTimeout(() => {
+            icon.classList.remove('fa-spin');
+            toast('تم التحديث', 'success');
+        }, 600);
+    });
+
+    /* ═══════════════════════════════════════
+       §20. EXPORT TO CSV
+    ═══════════════════════════════════════ */
+    function exportToCSV() {
+        if (allCards.length === 0) {
+            toast('لا توجد بيانات للتصدير', 'warning');
+            return;
+        }
+
+        const headers = ['ID', 'Code', 'Units', 'Network', 'Status', 'AddedBy', 'CreatedAt', 'ExpiresAt'];
+        const rows = allCards.map(c => [
+            c.id,
+            c.code || '',
+            c.units || 0,
+            c.network || '',
+            c.status || '',
+            c.addedBy || '',
+            c.createdAt?.toDate?.()?.toISOString() || '',
+            c.expiresAt?.toDate?.()?.toISOString() || ''
+        ]);
+
+        let csv = '\uFEFF'; // BOM for Arabic support
+        csv += headers.join(',') + '\n';
+        rows.forEach(row => {
+            csv += row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',') + '\n';
+        });
+
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `vodafone_cards_${new Date().toISOString().slice(0,10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        toast('تم تصدير البيانات بنجاح', 'success');
+    }
+
+    exportBtn.addEventListener('click', exportToCSV);
+
+    /* ═══════════════════════════════════════
+       §21. KEYBOARD SHORTCUTS
+    ═══════════════════════════════════════ */
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            coinsModal.classList.remove('open');
+            confirmModal.classList.remove('open');
+        }
+    });
+
+    </script>
+</body>
+</html>
