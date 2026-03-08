@@ -7,7 +7,6 @@
     <meta name="description" content="احصل على كروت شحن ڤودافون مجانية وشارك كروتك مع الآخرين">
     <meta name="theme-color" content="#e60000">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- REMOVED old compat scripts — now using ES module imports below -->
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap');
 
@@ -50,9 +49,6 @@
         color: var(--text-primary);
     }
 
-    /* ═══════════════════════════════════════
-       ANIMATED BACKGROUND
-    ═══════════════════════════════════════ */
     .bg-canvas {
         position: fixed;
         inset: 0;
@@ -107,7 +103,6 @@
         50% { transform: translate(-50%, -50%) scale(1.3); }
     }
 
-    /* Stars */
     .stars-layer {
         position: fixed;
         inset: 0;
@@ -132,7 +127,6 @@
         50% { opacity: 0.1; transform: scale(0.4); }
     }
 
-    /* Grid pattern overlay */
     .grid-overlay {
         position: fixed;
         inset: 0;
@@ -144,9 +138,6 @@
         pointer-events: none;
     }
 
-    /* ═══════════════════════════════════════
-       HEADER / NAVBAR
-    ═══════════════════════════════════════ */
     .top-nav {
         position: sticky;
         top: 0;
@@ -225,7 +216,6 @@
         color: var(--text-primary);
     }
 
-    /* ═══════════ NAV AUTH BUTTON ═══════════ */
     .nav-auth-btn {
         display: flex;
         align-items: center;
@@ -268,9 +258,6 @@
         white-space: nowrap;
     }
 
-    /* ═══════════════════════════════════════
-       HERO SECTION
-    ═══════════════════════════════════════ */
     .hero {
         position: relative;
         z-index: 1;
@@ -388,9 +375,6 @@
         transform: translateY(-2px);
     }
 
-    /* ═══════════════════════════════════════
-       FILTER / SORT BAR
-    ═══════════════════════════════════════ */
     .toolbar {
         position: relative;
         z-index: 2;
@@ -473,9 +457,6 @@
         box-shadow: 0 2px 10px var(--shadow-red);
     }
 
-    /* ═══════════════════════════════════════
-       CARDS GRID
-    ═══════════════════════════════════════ */
     .cards-section {
         position: relative;
         z-index: 1;
@@ -490,7 +471,6 @@
         gap: 1.5rem;
     }
 
-    /* Empty state */
     .empty-state {
         grid-column: 1 / -1;
         text-align: center;
@@ -522,9 +502,6 @@
         font-size: 0.95rem;
     }
 
-    /* ═══════════════════════════════════════
-       INDIVIDUAL CARD (Glassmorphism)
-    ═══════════════════════════════════════ */
     .vcard {
         position: relative;
         background: linear-gradient(145deg,
@@ -555,7 +532,6 @@
         }
     }
 
-    /* Card inner decorative border */
     .vcard::before {
         content: '';
         position: absolute;
@@ -565,7 +541,6 @@
         pointer-events: none;
     }
 
-    /* Background pattern */
     .vcard::after {
         content: '';
         position: absolute;
@@ -588,7 +563,6 @@
         z-index: 2;
     }
 
-    /* Card top row */
     .vcard-top {
         display: flex;
         align-items: center;
@@ -637,7 +611,6 @@
 
     .vcard-badge i { font-size: 0.6rem; }
 
-    /* Code block */
     .vcard-code-block {
         background: rgba(255, 255, 255, 0.95);
         border-radius: var(--radius-md);
@@ -698,7 +671,6 @@
         background: linear-gradient(135deg, #10b981, #059669);
     }
 
-    /* ═══════════ REVEAL CODE BUTTON ═══════════ */
     .vcard-reveal-btn {
         background: linear-gradient(135deg, var(--gold), #fbbf24);
         border: none;
@@ -725,7 +697,6 @@
         font-size: 0.8rem;
     }
 
-    /* Card meta row */
     .vcard-meta {
         display: flex;
         align-items: center;
@@ -776,7 +747,6 @@
         50% { opacity: 0.5; }
     }
 
-    /* Card footer */
     .vcard-footer {
         display: flex;
         align-items: center;
@@ -798,9 +768,6 @@
         direction: ltr;
     }
 
-    /* ═══════════════════════════════════════
-       PROGRESS BAR inside card
-    ═══════════════════════════════════════ */
     .vcard-progress-wrap {
         margin-top: 0.75rem;
         margin-bottom: 0.25rem;
@@ -821,9 +788,6 @@
         transition: width 1s linear;
     }
 
-    /* ═══════════════════════════════════════
-       FLOATING ACTION BUTTON
-    ═══════════════════════════════════════ */
     .fab-container {
         position: fixed;
         bottom: 1.5rem;
@@ -890,9 +854,6 @@
         transform: translateY(0);
     }
 
-    /* ═══════════════════════════════════════
-       MODAL
-    ═══════════════════════════════════════ */
     .modal-backdrop {
         position: fixed;
         inset: 0;
@@ -988,7 +949,6 @@
         margin-top: 0.4rem;
     }
 
-    /* Incentive banner */
     .incentive-banner {
         background: var(--gold-dim);
         border: 1px solid rgba(255, 215, 0, 0.2);
@@ -1011,7 +971,6 @@
         line-height: 1.7;
     }
 
-    /* Form fields */
     .form-field {
         margin-bottom: 1.25rem;
     }
@@ -1070,7 +1029,6 @@
         box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
     }
 
-    /* Submit button */
     .modal-submit {
         width: 100%;
         padding: 0.9rem;
@@ -1122,9 +1080,6 @@
 
     .modal-submit:disabled::before { display: none; }
 
-    /* ═══════════════════════════════════════
-       LOGIN MODAL (new)
-    ═══════════════════════════════════════ */
     .login-modal-content {
         text-align: center;
         padding: 1rem 0;
@@ -1187,9 +1142,6 @@
         height: 22px;
     }
 
-    /* ═══════════════════════════════════════
-       TOAST NOTIFICATION
-    ═══════════════════════════════════════ */
     .toast-container {
         position: fixed;
         top: 1.5rem;
@@ -1270,9 +1222,6 @@
         to { opacity: 0; transform: translateY(-20px) scale(0.95); }
     }
 
-    /* ═══════════════════════════════════════
-       SCROLL TO TOP
-    ═══════════════════════════════════════ */
     .scroll-top-btn {
         position: fixed;
         bottom: 1.5rem;
@@ -1309,9 +1258,6 @@
         transform: translateY(-3px);
     }
 
-    /* ═══════════════════════════════════════
-       LOADING SKELETON
-    ═══════════════════════════════════════ */
     .skeleton-card {
         background: var(--bg-card-glass);
         border: 1px solid var(--border-glass);
@@ -1342,9 +1288,6 @@
         100% { background-position: -200% 0; }
     }
 
-    /* ═══════════════════════════════════════
-       RESPONSIVE
-    ═══════════════════════════════════════ */
     @media (max-width: 768px) {
         .hero {
             padding: 2rem 1rem 1.5rem;
@@ -1438,9 +1381,6 @@
         }
     }
 
-    /* ═══════════════════════════════════════
-       ACCESSIBILITY & FOCUS STATES
-    ═══════════════════════════════════════ */
     :focus-visible {
         outline: 2px solid var(--main-red);
         outline-offset: 2px;
@@ -1451,7 +1391,6 @@
         outline: none;
     }
 
-    /* Scrollbar */
     ::-webkit-scrollbar {
         width: 6px;
     }
@@ -1469,12 +1408,10 @@
         background: rgba(255, 255, 255, 0.2);
     }
 
-    /* Smooth scroll */
     html {
         scroll-behavior: smooth;
     }
 
-    /* Selection color */
     ::selection {
         background: var(--main-red);
         color: white;
@@ -1483,7 +1420,7 @@
 </head>
 <body>
 
-    <!-- ░░░ Background ░░░ -->
+    <!-- Background -->
     <div class="bg-canvas">
         <div class="bg-gradient-orb"></div>
         <div class="bg-gradient-orb"></div>
@@ -1492,7 +1429,7 @@
     <div class="stars-layer" id="starsLayer"></div>
     <div class="grid-overlay"></div>
 
-    <!-- ░░░ Navigation ░░░ -->
+    <!-- Navigation -->
     <nav class="top-nav" id="topNav">
         <div class="nav-brand">
             <div class="nav-logo">VF</div>
@@ -1509,7 +1446,6 @@
                 <span>المساهمين:</span>
                 <span class="stat-value" id="contributorsCount">0</span>
             </div>
-            <!-- ═══ AUTH BUTTON (new) ═══ -->
             <button class="nav-auth-btn" id="navAuthBtn">
                 <i class="fas fa-user-circle"></i>
                 <span>تسجيل الدخول</span>
@@ -1517,7 +1453,7 @@
         </div>
     </nav>
 
-    <!-- ░░░ Hero ░░░ -->
+    <!-- Hero -->
     <section class="hero">
         <div class="hero-badge">
             <i class="fas fa-star"></i>
@@ -1541,7 +1477,7 @@
         </div>
     </section>
 
-    <!-- ░░░ Toolbar ░░░ -->
+    <!-- Toolbar -->
     <div class="toolbar" id="cards">
         <div class="search-box">
             <i class="fas fa-search"></i>
@@ -1555,10 +1491,9 @@
         </div>
     </div>
 
-    <!-- ░░░ Cards ░░░ -->
+    <!-- Cards -->
     <section class="cards-section">
         <div class="cards-grid" id="cardsGrid">
-            <!-- Skeleton loaders shown initially -->
             <div class="skeleton-card" id="skeleton1">
                 <div class="skeleton-line w60"></div>
                 <div class="skeleton-line w100 h40"></div>
@@ -1580,7 +1515,7 @@
         </div>
     </section>
 
-    <!-- ░░░ FAB ░░░ -->
+    <!-- FAB -->
     <div class="fab-container">
         <span class="fab-label">أضف كارت جديد</span>
         <button class="fab" id="fabBtn" aria-label="إضافة كارت جديد">
@@ -1588,12 +1523,12 @@
         </button>
     </div>
 
-    <!-- ░░░ Scroll to top ░░░ -->
+    <!-- Scroll to top -->
     <button class="scroll-top-btn" id="scrollTopBtn" aria-label="العودة للأعلى">
         <i class="fas fa-chevron-up"></i>
     </button>
 
-    <!-- ░░░ Card Submission Modal ░░░ -->
+    <!-- Card Submission Modal -->
     <div class="modal-backdrop" id="modalBackdrop">
         <div class="modal-panel" role="dialog" aria-labelledby="modalTitle">
             <button class="modal-close" id="modalClose" aria-label="إغلاق">
@@ -1654,7 +1589,7 @@
         </div>
     </div>
 
-    <!-- ░░░ Login Modal (new) ░░░ -->
+    <!-- Login Modal -->
     <div class="modal-backdrop" id="loginModalBackdrop">
         <div class="modal-panel" role="dialog" aria-labelledby="loginModalTitle">
             <button class="modal-close" id="loginModalClose" aria-label="إغلاق">
@@ -1674,13 +1609,10 @@
         </div>
     </div>
 
-    <!-- ░░░ Toast container ░░░ -->
+    <!-- Toast container -->
     <div class="toast-container" id="toastContainer"></div>
 
 
-    <!-- ═══════════════════════════════════════
-         JAVASCRIPT — ES MODULES
-    ═══════════════════════════════════════ -->
     <script type="module">
 
     /* ═══════════════════════════════════════
@@ -1735,8 +1667,8 @@
     let searchQuery = '';
     let skeletonsRemoved = false;
     let currentUser = null;
+    let currentUnsubscribe = null;
 
-    // Rate limiting: track submission timestamps per session
     const submissionTimestamps = [];
 
     /* ═══════════════════════════════════════
@@ -1817,7 +1749,6 @@
        §6. AUTHENTICATION
     ═══════════════════════════════════════ */
 
-    // --- Login Modal ---
     function openLoginModal() {
         loginModalBackdrop.classList.add('open');
         document.body.style.overflow = 'hidden';
@@ -1825,7 +1756,6 @@
 
     function closeLoginModal() {
         loginModalBackdrop.classList.remove('open');
-        // Only restore scroll if the card submission modal is also closed
         if (!modalBackdrop.classList.contains('open')) {
             document.body.style.overflow = '';
         }
@@ -1836,7 +1766,6 @@
         if (e.target === loginModalBackdrop) closeLoginModal();
     });
 
-    // --- Google Sign-In ---
     async function signInWithGoogle() {
         try {
             googleLoginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري تسجيل الدخول...';
@@ -1845,7 +1774,6 @@
             const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
 
-            // Prepare user document in Firestore (coin system)
             await ensureUserDocument(user);
 
             showToast(`مرحباً ${user.displayName || 'بك'}!`, 'success');
@@ -1866,7 +1794,6 @@
 
     googleLoginBtn.addEventListener('click', signInWithGoogle);
 
-    // --- Coin system: ensure user doc exists ---
     async function ensureUserDocument(user) {
         try {
             const userRef = doc(db, 'users', user.uid);
@@ -1885,7 +1812,6 @@
         }
     }
 
-    // --- Nav auth button ---
     function updateAuthUI(user) {
         if (user) {
             if (user.photoURL) {
@@ -1909,7 +1835,6 @@
 
     navAuthBtn.addEventListener('click', async () => {
         if (currentUser) {
-            // Sign out
             try {
                 await signOut(auth);
                 showToast('تم تسجيل الخروج', 'info');
@@ -1921,7 +1846,6 @@
         }
     });
 
-    // --- Auth state listener ---
     onAuthStateChanged(auth, (user) => {
         currentUser = user;
         updateAuthUI(user);
@@ -1930,7 +1854,6 @@
             ensureUserDocument(user);
         }
 
-        // Re-render cards to update reveal buttons
         if (allCards.length > 0) {
             renderCards();
         }
@@ -1940,7 +1863,6 @@
        §7. CARD SUBMISSION MODAL LOGIC
     ═══════════════════════════════════════ */
     function openModal() {
-        // Require login to submit
         if (!currentUser) {
             openLoginModal();
             return;
@@ -2012,7 +1934,6 @@
        §9. SECURITY CHECKS
     ═══════════════════════════════════════ */
 
-    // 9a. Duplicate card protection
     async function isCodeUnique(code) {
         try {
             const q = query(collection(db, 'cards'), where('code', '==', code));
@@ -2024,18 +1945,16 @@
         }
     }
 
-    // 9b. Rate limiting — max 3 submissions per minute
     function checkRateLimit() {
         const now = Date.now();
         const oneMinuteAgo = now - 60000;
 
-        // Clean up old timestamps
         while (submissionTimestamps.length > 0 && submissionTimestamps[0] < oneMinuteAgo) {
             submissionTimestamps.shift();
         }
 
         if (submissionTimestamps.length >= 3) {
-            return false; // Rate limited
+            return false;
         }
         return true;
     }
@@ -2044,13 +1963,11 @@
         submissionTimestamps.push(Date.now());
     }
 
-    // 9c. Input validation (used in submit handler)
     function validateCardInput(code, units) {
         if (!code || !units) {
             return { valid: false, message: 'الرجاء ملء جميع الحقول', field: 'both' };
         }
 
-        // Only digits
         if (!/^\d+$/.test(code)) {
             return { valid: false, message: 'الكود يجب أن يحتوي على أرقام فقط', field: 'code' };
         }
@@ -2072,7 +1989,6 @@
     ═══════════════════════════════════════ */
     async function createCard(code, units) {
         try {
-            // Check for duplicate
             const isUnique = await isCodeUnique(code);
             if (!isUnique) {
                 showToast('هذا الكارت تم نشره من قبل', 'warning');
@@ -2101,7 +2017,6 @@
     }
 
     submitCardBtn.addEventListener('click', async () => {
-        // 9d. Require login
         if (!currentUser) {
             closeModal();
             openLoginModal();
@@ -2111,7 +2026,6 @@
         const code = codeInput.value.trim();
         const units = unitsInput.value.trim();
 
-        // Validate input
         const validation = validateCardInput(code, units);
         if (!validation.valid) {
             showToast(validation.message, 'error');
@@ -2120,13 +2034,11 @@
             return;
         }
 
-        // Rate limit check
         if (!checkRateLimit()) {
             showToast('أنت ترسل كروت بسرعة كبيرة. انتظر دقيقة ثم حاول مرة أخرى.', 'warning');
             return;
         }
 
-        // Disable & show loading
         submitCardBtn.disabled = true;
         submitCardBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري النشر...';
 
@@ -2148,7 +2060,6 @@
             return;
         }
 
-        // User is logged in — reveal the code
         const codeSpan = cardEl.querySelector('.vcard-code');
         const revealBtn = cardEl.querySelector('.vcard-reveal-btn');
         const copyBtn = cardEl.querySelector('.vcard-copy-btn');
@@ -2157,14 +2068,11 @@
         codeSpan.classList.remove('masked');
         codeSpan.style.userSelect = 'all';
 
-        // Remove reveal button
         if (revealBtn) revealBtn.remove();
 
-        // Enable copy button
         copyBtn.style.display = 'flex';
         copyBtn.disabled = false;
 
-        // Log event
         logEvent(analytics, 'code_revealed');
     }
 
@@ -2182,7 +2090,6 @@
                 btnEl.innerHTML = '<i class="fas fa-copy"></i>';
             }, 2000);
         }).catch(() => {
-            // Fallback
             const textarea = document.createElement('textarea');
             textarea.value = code;
             document.body.appendChild(textarea);
@@ -2208,7 +2115,6 @@
     }
 
     function maskCode(code) {
-        // Example: **** **** **** *
         return code.replace(/./g, '*').match(/.{1,4}/g).join(' ');
     }
 
@@ -2244,7 +2150,6 @@
         card.dataset.expiration = expirationTime;
         card.dataset.created = createdTime.getTime();
 
-        // Determine if code should be visible (user logged in or not)
         const isRevealed = !!currentUser;
 
         card.innerHTML = `
@@ -2310,7 +2215,6 @@
             </div>
         `;
 
-        // Event handlers
         const copyBtn = card.querySelector('.vcard-copy-btn');
         copyBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -2329,7 +2233,6 @@
             });
         }
 
-        // Auto-remove "new" badge
         if (isNew) {
             const badge = card.querySelector('.vcard-badge');
             const remainingNew = (15 * 60 * 1000) - elapsed;
@@ -2349,7 +2252,6 @@
        §15. RENDER ALL CARDS (with filter/search)
     ═══════════════════════════════════════ */
     function renderCards() {
-        // Remove skeletons
         if (!skeletonsRemoved) {
             $$('.skeleton-card').forEach(s => s.remove());
             skeletonsRemoved = true;
@@ -2360,7 +2262,6 @@
         let filtered = [...allCards];
         const now = Date.now();
 
-        // Search
         if (searchQuery) {
             filtered = filtered.filter(c =>
                 c.code.includes(searchQuery) ||
@@ -2368,7 +2269,6 @@
             );
         }
 
-        // Filter
         switch (activeFilter) {
             case 'new':
                 filtered = filtered.filter(c =>
@@ -2387,10 +2287,8 @@
                 filtered.sort((a, b) => b.createdAt.toDate().getTime() - a.createdAt.toDate().getTime());
         }
 
-        // Update count
         cardCountEl.textContent = allCards.length;
 
-        // Count unique contributors by addedBy field
         const uniqueContributors = new Set(allCards.map(c => c.addedBy).filter(Boolean));
         contributorsCountEl.textContent = uniqueContributors.size;
 
@@ -2420,29 +2318,84 @@
     /* ═══════════════════════════════════════
        §16. FIRESTORE REALTIME LISTENER
        — Only approved vodafone cards
+       — FIX: moved expiresAt filter to client
+         side to avoid needing a complex
+         composite index and to always use
+         the current time.
     ═══════════════════════════════════════ */
     function loadCards() {
+        // Unsubscribe from any previous listener
+        if (currentUnsubscribe) {
+            currentUnsubscribe();
+            currentUnsubscribe = null;
+        }
+
         const cardsQuery = query(
             collection(db, 'cards'),
             where('network', '==', 'vodafone'),
             where('status', '==', 'approved'),
-            where('expiresAt', '>', Timestamp.now())
+            orderBy('createdAt', 'desc')
         );
 
-        onSnapshot(cardsQuery, (snapshot) => {
+        currentUnsubscribe = onSnapshot(cardsQuery, (snapshot) => {
+            const now = Date.now();
             allCards = [];
             snapshot.forEach((docSnap) => {
                 const data = docSnap.data();
-                if (data.createdAt) {
-                    allCards.push({ id: docSnap.id, ...data });
+                // Client-side expiration check using current time
+                if (data.createdAt && data.expiresAt) {
+                    const expirationTime = data.expiresAt.toDate().getTime();
+                    if (expirationTime > now) {
+                        allCards.push({ id: docSnap.id, ...data });
+                    }
                 }
             });
             renderCards();
         }, (error) => {
             console.error("Firestore error:", error);
+
+            // If the composite index is missing, fall back to a simpler query
+            if (error.code === 'failed-precondition' || error.code === 'permission-denied') {
+                console.warn('Composite index may be missing — falling back to simple query');
+                loadCardsFallback();
+                return;
+            }
+
             showToast('خطأ في تحميل الكروت', 'error');
 
-            // Remove skeletons even on error
+            if (!skeletonsRemoved) {
+                $$('.skeleton-card').forEach(s => s.remove());
+                skeletonsRemoved = true;
+            }
+        });
+    }
+
+    /* Fallback: minimal query that works without any composite index */
+    function loadCardsFallback() {
+        const simpleQuery = query(
+            collection(db, 'cards'),
+            where('status', '==', 'approved')
+        );
+
+        currentUnsubscribe = onSnapshot(simpleQuery, (snapshot) => {
+            const now = Date.now();
+            allCards = [];
+            snapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                if (
+                    data.createdAt &&
+                    data.expiresAt &&
+                    data.network === 'vodafone' &&
+                    data.expiresAt.toDate().getTime() > now
+                ) {
+                    allCards.push({ id: docSnap.id, ...data });
+                }
+            });
+            renderCards();
+        }, (error) => {
+            console.error("Fallback Firestore error:", error);
+            showToast('خطأ في تحميل الكروت', 'error');
+
             if (!skeletonsRemoved) {
                 $$('.skeleton-card').forEach(s => s.remove());
                 skeletonsRemoved = true;
