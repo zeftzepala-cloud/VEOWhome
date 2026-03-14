@@ -224,17 +224,6 @@
         color: var(--text-primary);
     }
 
-    /* COIN CHIP STYLING */
-    .coin-chip {
-        background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.03));
-        border-color: rgba(255, 215, 0, 0.25);
-        transition: transform 0.2s, background 0.2s;
-    }
-    .coin-chip:hover {
-        transform: scale(1.05);
-        background: rgba(255, 215, 0, 0.15);
-    }
-
     /* ═══════════ NAV AUTH BUTTON ═══════════ */
     .nav-auth-btn {
         display: flex;
@@ -276,6 +265,92 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+
+    /* ═══════════════════════════════════════
+       COINS BADGE
+    ═══════════════════════════════════════ */
+    .coins-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.12), rgba(255, 215, 0, 0.05));
+        border: 1px solid rgba(255, 215, 0, 0.2);
+        padding: 0.4rem 0.9rem;
+        border-radius: 50px;
+        cursor: default;
+        transition: var(--transition-fast);
+        direction: ltr;
+        user-select: none;
+    }
+
+    .coins-badge:hover {
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.18), rgba(255, 215, 0, 0.08));
+        border-color: rgba(255, 215, 0, 0.35);
+        transform: scale(1.03);
+    }
+
+    .coins-badge-icon {
+        width: 22px;
+        height: 22px;
+        object-fit: contain;
+        filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.4));
+    }
+
+    .coins-badge-amount {
+        color: var(--gold);
+        font-weight: 700;
+        font-size: 0.95rem;
+        letter-spacing: 0.5px;
+        font-variant-numeric: tabular-nums;
+        min-width: 20px;
+        text-align: center;
+    }
+
+    .coins-badge-label {
+        color: rgba(255, 215, 0, 0.7);
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    /* Coin update animation */
+    @keyframes coinPulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.15); }
+        100% { transform: scale(1); }
+    }
+
+    .coins-badge.updated {
+        animation: coinPulse 0.4s ease;
+    }
+
+    /* Responsive: show coins badge on mobile in nav */
+    @media (max-width: 768px) {
+        .coins-badge {
+            padding: 0.35rem 0.75rem;
+            gap: 0.4rem;
+        }
+
+        .coins-badge-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .coins-badge-amount {
+            font-size: 0.85rem;
+        }
+
+        .coins-badge-label {
+            display: none;
+        }
+        
+        .nav-stats {
+            display: flex !important;
+        }
+        
+        .nav-stats .stat-chip {
+            display: none;
+        }
     }
 
     /* ═══════════════════════════════════════
@@ -533,305 +608,6 @@
     }
 
     /* ═══════════════════════════════════════
-       INDIVIDUAL CARD (Glassmorphism)
-    ═══════════════════════════════════════ */
-    .vcard {
-        position: relative;
-        background: linear-gradient(145deg,
-            rgba(230, 0, 0, 0.85),
-            rgba(179, 0, 0, 0.92));
-        border-radius: var(--radius-lg);
-        padding: 1.5rem;
-        color: white;
-        overflow: hidden;
-        transition: var(--transition-normal);
-        cursor: default;
-        border: 1px solid rgba(255, 215, 0, 0.3);
-        animation: cardEnter 0.5s cubic-bezier(0.4, 0, 0.2, 1) backwards;
-    }
-
-    .vcard:hover {
-        transform: translateY(-6px) scale(1.01);
-        box-shadow:
-            0 20px 60px rgba(0, 0, 0, 0.4),
-            0 0 40px rgba(230, 0, 0, 0.15);
-        border-color: rgba(255, 215, 0, 0.5);
-    }
-
-    @keyframes cardEnter {
-        from {
-            opacity: 0;
-            transform: translateY(30px) scale(0.95);
-        }
-    }
-
-    /* Card inner decorative border */
-    .vcard::before {
-        content: '';
-        position: absolute;
-        inset: 6px;
-        border: 1px solid rgba(255, 215, 0, 0.2);
-        border-radius: calc(var(--radius-lg) - 4px);
-        pointer-events: none;
-    }
-
-    /* Background pattern */
-    .vcard::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background:
-            radial-gradient(circle at 20% 80%, rgba(255,215,0,0.08) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 50%),
-            repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 20px,
-                rgba(255,215,0,0.03) 20px,
-                rgba(255,215,0,0.03) 21px
-            );
-        pointer-events: none;
-    }
-
-    .vcard-inner {
-        position: relative;
-        z-index: 2;
-    }
-
-    /* Card top row */
-    .vcard-top {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 1.25rem;
-    }
-
-    .vcard-brand {
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-    }
-
-    .vcard-logo {
-        width: 36px;
-        height: 36px;
-        border-radius: 10px;
-        object-fit: contain;
-        background: white;
-        padding: 4px;
-    }
-
-    .vcard-brand-name {
-        font-size: 1.15rem;
-        font-weight: 700;
-        letter-spacing: 1px;
-    }
-
-    .vcard-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.3rem;
-        background: var(--gold);
-        color: var(--dark-red);
-        padding: 0.25rem 0.7rem;
-        border-radius: 50px;
-        font-size: 0.75rem;
-        font-weight: 700;
-        animation: badgeBounce 2s ease-in-out infinite;
-    }
-
-    @keyframes badgeBounce {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.08); }
-    }
-
-    .vcard-badge i { font-size: 0.6rem; }
-
-    /* Code block */
-    .vcard-code-block {
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: var(--radius-md);
-        padding: 1rem 1.25rem;
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.75rem;
-        direction: ltr;
-        transition: var(--transition-fast);
-    }
-
-    .vcard-code-block:hover {
-        background: #fff;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    }
-
-    .vcard-code {
-        font-family: 'Courier New', monospace;
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: #1a1a2e;
-        letter-spacing: 2px;
-        user-select: all;
-        flex: 1;
-        text-align: center;
-    }
-
-    .vcard-code.masked {
-        color: #999;
-        letter-spacing: 4px;
-        user-select: none;
-    }
-
-    .vcard-copy-btn {
-        background: linear-gradient(135deg, var(--main-red), var(--dark-red));
-        border: none;
-        color: white;
-        width: 38px;
-        height: 38px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: var(--transition-fast);
-        flex-shrink: 0;
-        font-size: 0.9rem;
-    }
-
-    .vcard-copy-btn:hover {
-        transform: scale(1.08);
-        box-shadow: 0 4px 12px var(--shadow-red);
-    }
-
-    .vcard-copy-btn.copied {
-        background: linear-gradient(135deg, #10b981, #059669);
-    }
-
-    /* ═══════════ REVEAL CODE BUTTON ═══════════ */
-    .vcard-reveal-btn {
-        background: linear-gradient(135deg, var(--gold), #fbbf24);
-        border: none;
-        color: var(--dark-red);
-        padding: 0.5rem 1.2rem;
-        border-radius: 10px;
-        cursor: pointer;
-        font-family: 'Tajawal', sans-serif;
-        font-size: 0.85rem;
-        font-weight: 700;
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-        transition: var(--transition-fast);
-        flex-shrink: 0;
-    }
-
-    .vcard-reveal-btn:hover {
-        transform: scale(1.05);
-        box-shadow: 0 4px 15px var(--shadow-gold);
-    }
-
-    .vcard-reveal-btn i {
-        font-size: 0.8rem;
-    }
-
-    /* Card meta row */
-    .vcard-meta {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-    }
-
-    .vcard-units {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(10px);
-        padding: 0.45rem 0.9rem;
-        border-radius: 50px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        border: 1px solid rgba(255,255,255,0.15);
-    }
-
-    .vcard-units i {
-        color: var(--gold);
-        font-size: 0.75rem;
-    }
-
-    .vcard-timer {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        font-size: 0.85rem;
-        color: rgba(255, 255, 255, 0.85);
-        font-weight: 500;
-    }
-
-    .vcard-timer i {
-        color: var(--gold);
-        font-size: 0.7rem;
-    }
-
-    .vcard-timer.expiring-soon {
-        color: var(--gold);
-        animation: timerPulse 1s ease-in-out infinite;
-    }
-
-    @keyframes timerPulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.5; }
-    }
-
-    /* Card footer */
-    .vcard-footer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-top: 1rem;
-        padding-top: 0.75rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .vcard-event {
-        font-size: 0.8rem;
-        color: var(--gold);
-        font-weight: 500;
-    }
-
-    .vcard-site {
-        font-size: 0.8rem;
-        color: rgba(255, 255, 255, 0.6);
-        direction: ltr;
-    }
-
-    /* ═══════════════════════════════════════
-       PROGRESS BAR inside card
-    ═══════════════════════════════════════ */
-    .vcard-progress-wrap {
-        margin-top: 0.75rem;
-        margin-bottom: 0.25rem;
-    }
-
-    .vcard-progress-bar {
-        width: 100%;
-        height: 4px;
-        background: rgba(255, 255, 255, 0.15);
-        border-radius: 10px;
-        overflow: hidden;
-    }
-
-    .vcard-progress-fill {
-        height: 100%;
-        background: linear-gradient(90deg, var(--gold), #fbbf24);
-        border-radius: 10px;
-        transition: width 1s linear;
-    }
-
-    /* ═══════════════════════════════════════
        FLOATING ACTION BUTTON
     ═══════════════════════════════════════ */
     .fab-container {
@@ -1010,7 +786,7 @@
 
     .incentive-banner i {
         color: var(--gold);
-        font-size: 1.2rem;
+        font-size: 1.5rem;
         margin-bottom: 0.5rem;
         display: block;
     }
@@ -1133,7 +909,7 @@
     .modal-submit:disabled::before { display: none; }
 
     /* ═══════════════════════════════════════
-       LOGIN MODAL (new)
+       LOGIN MODAL
     ═══════════════════════════════════════ */
     .login-modal-content {
         text-align: center;
@@ -1356,202 +1132,51 @@
        RESPONSIVE
     ═══════════════════════════════════════ */
     @media (max-width: 768px) {
-        .hero {
-            padding: 2rem 1rem 1.5rem;
-        }
-
-        .hero h1 {
-            font-size: 1.8rem;
-        }
-
-        .hero-subtitle {
-            font-size: 0.95rem;
-        }
-
-        .toolbar {
-            padding: 0 1rem;
-        }
-
-        .search-box {
-            max-width: 100%;
-            flex-basis: 100%;
-        }
-
-        .cards-section {
-            padding: 0 1rem 7rem;
-        }
-
-        .cards-grid {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-
-        .vcard {
-            padding: 1.25rem;
-        }
-
-        .vcard-code {
-            font-size: 1rem;
-            letter-spacing: 1px;
-        }
-
-        .fab {
-            width: 54px;
-            height: 54px;
-            font-size: 1.2rem;
-        }
-
-        .fab-container {
-            bottom: 1rem;
-            left: 1rem;
-        }
-
-        .modal-panel {
-            padding: 1.5rem;
-            border-radius: var(--radius-lg);
-        }
-
-        /* Adjusted nav-stats logic to keep Auth & Coins visible on Mobile */
-        .nav-stats {
-            display: flex !important;
-            gap: 0.5rem;
-        }
-
-        .hide-on-mobile {
-            display: none !important;
-        }
-
-        .nav-auth-btn span {
-            display: none;
-        }
-
-        .nav-auth-btn {
-            padding: 0.5rem;
-            border-radius: 50%;
-            justify-content: center;
-        }
-
-        .nav-auth-btn img {
-            margin: 0;
-        }
-
-        .filter-chips {
-            overflow-x: auto;
-            flex-wrap: nowrap;
-            -webkit-overflow-scrolling: touch;
-            padding-bottom: 0.25rem;
-        }
-
-        .chip {
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
+        .hero { padding: 2rem 1rem 1.5rem; }
+        .hero h1 { font-size: 1.8rem; }
+        .hero-subtitle { font-size: 0.95rem; }
+        .toolbar { padding: 0 1rem; }
+        .search-box { max-width: 100%; flex-basis: 100%; }
+        .cards-section { padding: 0 1rem 7rem; }
+        .cards-grid { grid-template-columns: 1fr; gap: 1rem; }
+        .vcard { padding: 1.25rem; }
+        .vcard-code { font-size: 1rem; letter-spacing: 1px; }
+        .fab { width: 54px; height: 54px; font-size: 1.2rem; }
+        .fab-container { bottom: 1rem; left: 1rem; }
+        .modal-panel { padding: 1.5rem; border-radius: var(--radius-lg); }
+        .filter-chips { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; padding-bottom: 0.25rem; }
+        .chip { white-space: nowrap; flex-shrink: 0; }
     }
 
     @media (min-width: 1024px) {
-        .cards-grid {
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 2rem;
-        }
-
-        .vcard {
-            padding: 1.75rem;
-        }
-
-        .vcard-code {
-            font-size: 1.35rem;
-            letter-spacing: 3px;
-        }
+        .cards-grid { grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 2rem; }
+        .vcard { padding: 1.75rem; }
+        .vcard-code { font-size: 1.35rem; letter-spacing: 3px; }
     }
 
-    /* ═══════════════════════════════════════
-       ACCESSIBILITY & FOCUS STATES
-    ═══════════════════════════════════════ */
-    :focus-visible {
-        outline: 2px solid var(--main-red);
-        outline-offset: 2px;
-    }
-
-    button:focus:not(:focus-visible),
-    input:focus:not(:focus-visible) {
-        outline: none;
-    }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.2);
-    }
-
-    /* Smooth scroll */
-    html {
-        scroll-behavior: smooth;
-    }
-
-    /* Selection color */
-    ::selection {
-        background: var(--main-red);
-        color: white;
-    }
+    :focus-visible { outline: 2px solid var(--main-red); outline-offset: 2px; }
+    button:focus:not(:focus-visible), input:focus:not(:focus-visible) { outline: none; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+    html { scroll-behavior: smooth; }
+    ::selection { background: var(--main-red); color: white; }
     </style>
 <style>
 /* ═══════════════════════════════════════
    CARD OVERHAUL — HOLOGRAPHIC PREMIUM
 ═══════════════════════════════════════ */
+@property --ratio-x { syntax: '<number>'; initial-value: 0; inherits: false; }
+@property --ratio-y { syntax: '<number>'; initial-value: 0; inherits: false; }
+@property --holo-angle { syntax: '<angle>'; initial-value: 135deg; inherits: false; }
+@property --glow-opacity { syntax: '<number>'; initial-value: 0; inherits: false; }
 
-/* Register custom properties for smooth interpolation */
-@property --ratio-x {
-    syntax: '<number>';
-    initial-value: 0;
-    inherits: false;
-}
+.vcard-perspective { perspective: 800px; perspective-origin: 50% 50%; }
 
-@property --ratio-y {
-    syntax: '<number>';
-    initial-value: 0;
-    inherits: false;
-}
-
-@property --holo-angle {
-    syntax: '<angle>';
-    initial-value: 135deg;
-    inherits: false;
-}
-
-@property --glow-opacity {
-    syntax: '<number>';
-    initial-value: 0;
-    inherits: false;
-}
-
-/* ── Card wrapper with 3D perspective ── */
-.vcard-perspective {
-    perspective: 800px;
-    perspective-origin: 50% 50%;
-}
-
-/* ── Redesigned Card ── */
 .vcard {
     position: relative;
-    background: linear-gradient(
-        165deg,
-        rgba(180, 0, 0, 0.92) 0%,
-        rgba(140, 0, 0, 0.95) 35%,
-        rgba(100, 0, 0, 0.97) 70%,
-        rgba(80, 0, 10, 0.98) 100%
-    );
+    background: linear-gradient(165deg, rgba(180, 0, 0, 0.92) 0%, rgba(140, 0, 0, 0.95) 35%, rgba(100, 0, 0, 0.97) 70%, rgba(80, 0, 10, 0.98) 100%);
     border-radius: var(--radius-lg);
     padding: 0;
     color: white;
@@ -1561,690 +1186,139 @@
     animation: cardEnter 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
     transform-style: preserve-3d;
     transform: rotateY(calc(-12deg * var(--ratio-x))) rotateX(calc(12deg * var(--ratio-y)));
-    transition:
-        transform 0.45s cubic-bezier(0.03, 0.98, 0.52, 0.99),
-        box-shadow var(--transition-normal),
-        border-color var(--transition-normal),
-        --ratio-x 0.45s cubic-bezier(0.03, 0.98, 0.52, 0.99),
-        --ratio-y 0.45s cubic-bezier(0.03, 0.98, 0.52, 0.99),
-        --holo-angle 0.45s ease,
-        --glow-opacity 0.3s ease;
+    transition: transform 0.45s cubic-bezier(0.03, 0.98, 0.52, 0.99), box-shadow var(--transition-normal), border-color var(--transition-normal), --ratio-x 0.45s cubic-bezier(0.03, 0.98, 0.52, 0.99), --ratio-y 0.45s cubic-bezier(0.03, 0.98, 0.52, 0.99), --holo-angle 0.45s ease, --glow-opacity 0.3s ease;
     will-change: transform;
-    --ratio-x: 0;
-    --ratio-y: 0;
-    --holo-angle: 135deg;
-    --glow-opacity: 0;
+    --ratio-x: 0; --ratio-y: 0; --holo-angle: 135deg; --glow-opacity: 0;
 }
 
 @keyframes cardEnter {
-    from {
-        opacity: 0;
-        transform: translateY(40px) rotateX(8deg) scale(0.92);
-        filter: blur(4px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) rotateX(0) scale(1);
-        filter: blur(0);
-    }
+    from { opacity: 0; transform: translateY(40px) rotateX(8deg) scale(0.92); filter: blur(4px); }
+    to { opacity: 1; transform: translateY(0) rotateX(0) scale(1); filter: blur(0); }
 }
 
 .vcard:hover {
     transform: rotateY(calc(-12deg * var(--ratio-x))) rotateX(calc(12deg * var(--ratio-y))) translateY(-4px);
-    box-shadow:
-        0 25px 60px -15px rgba(0, 0, 0, 0.6),
-        0 0 50px -10px rgba(230, 0, 0, 0.25),
-        0 0 80px -20px rgba(255, 215, 0, 0.08);
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6), 0 0 50px -10px rgba(230, 0, 0, 0.25), 0 0 80px -20px rgba(255, 215, 0, 0.08);
     border-color: rgba(255, 215, 0, 0.5);
 }
 
-/* ── Holographic foil layer ── */
 .vcard::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(
-            ellipse at calc(50% + (var(--ratio-x) * 30%)) calc(50% + (var(--ratio-y) * 30%)),
-            rgba(255, 215, 0, 0.12) 0%,
-            transparent 60%
-        ),
-        linear-gradient(
-            var(--holo-angle),
-            transparent 0%,
-            rgba(255, 215, 0, 0.06) 25%,
-            rgba(255, 100, 100, 0.05) 40%,
-            rgba(255, 255, 255, 0.08) 50%,
-            rgba(255, 215, 0, 0.06) 60%,
-            rgba(200, 50, 50, 0.04) 75%,
-            transparent 100%
-        );
-    pointer-events: none;
-    z-index: 1;
-    opacity: var(--glow-opacity);
-    transition: opacity 0.3s ease;
-    mix-blend-mode: screen;
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at calc(50% + (var(--ratio-x) * 30%)) calc(50% + (var(--ratio-y) * 30%)), rgba(255, 215, 0, 0.12) 0%, transparent 60%), linear-gradient(var(--holo-angle), transparent 0%, rgba(255, 215, 0, 0.06) 25%, rgba(255, 100, 100, 0.05) 40%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 215, 0, 0.06) 60%, rgba(200, 50, 50, 0.04) 75%, transparent 100%);
+    pointer-events: none; z-index: 1; opacity: var(--glow-opacity); transition: opacity 0.3s ease; mix-blend-mode: screen;
 }
 
-/* ── Card inner decorative frame ── */
 .vcard::after {
-    content: '';
-    position: absolute;
-    inset: 5px;
-    border: 1px solid rgba(255, 215, 0, 0.12);
-    border-radius: calc(var(--radius-lg) - 3px);
-    pointer-events: none;
-    z-index: 1;
-    background:
-        linear-gradient(135deg, rgba(255,215,0,0.03) 0%, transparent 50%),
-        repeating-linear-gradient(
-            -45deg,
-            transparent,
-            transparent 30px,
-            rgba(255,215,0,0.015) 30px,
-            rgba(255,215,0,0.015) 31px
-        );
+    content: ''; position: absolute; inset: 5px; border: 1px solid rgba(255, 215, 0, 0.12); border-radius: calc(var(--radius-lg) - 3px); pointer-events: none; z-index: 1;
+    background: linear-gradient(135deg, rgba(255,215,0,0.03) 0%, transparent 50%), repeating-linear-gradient(-45deg, transparent, transparent 30px, rgba(255,215,0,0.015) 30px, rgba(255,215,0,0.015) 31px);
     transition: border-color 0.3s ease;
 }
 
-.vcard:hover::after {
-    border-color: rgba(255, 215, 0, 0.22);
-}
+.vcard:hover::after { border-color: rgba(255, 215, 0, 0.22); }
 
-/* ── Shimmer sweep on hover ── */
-.vcard-shimmer {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-    overflow: hidden;
-    border-radius: var(--radius-lg);
-}
-
+.vcard-shimmer { position: absolute; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; border-radius: var(--radius-lg); }
 .vcard-shimmer::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: conic-gradient(
-        from var(--holo-angle),
-        transparent 0%,
-        rgba(255, 215, 0, 0.04) 10%,
-        transparent 20%,
-        rgba(255, 255, 255, 0.03) 30%,
-        transparent 40%,
-        rgba(255, 200, 100, 0.03) 50%,
-        transparent 60%
-    );
-    opacity: var(--glow-opacity);
-    transition: opacity 0.3s ease;
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: conic-gradient(from var(--holo-angle), transparent 0%, rgba(255, 215, 0, 0.04) 10%, transparent 20%, rgba(255, 255, 255, 0.03) 30%, transparent 40%, rgba(255, 200, 100, 0.03) 50%, transparent 60%);
+    opacity: var(--glow-opacity); transition: opacity 0.3s ease;
 }
 
-/* ── Inner padding wrapper ── */
-.vcard-inner {
-    position: relative;
-    z-index: 3;
-    padding: 1.5rem;
-}
+.vcard-inner { position: relative; z-index: 3; padding: 1.5rem; }
+.vcard-accent-line { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent 0%, var(--gold) 15%, rgba(255, 100, 50, 0.8) 50%, var(--gold) 85%, transparent 100%); z-index: 4; opacity: 0.7; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
 
-/* ── Chip connector line (top accent) ── */
-.vcard-accent-line {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(
-        90deg,
-        transparent 0%,
-        var(--gold) 15%,
-        rgba(255, 100, 50, 0.8) 50%,
-        var(--gold) 85%,
-        transparent 100%
-    );
-    z-index: 4;
-    opacity: 0.7;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-}
+.vcard-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.1rem; }
+.vcard-brand { display: flex; align-items: center; gap: 0.65rem; }
+.vcard-logo { width: 40px; height: 40px; border-radius: 11px; object-fit: contain; background: white; padding: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.vcard:hover .vcard-logo { transform: scale(1.06) translateZ(10px); box-shadow: 0 4px 15px rgba(0,0,0,0.25); }
+.vcard-brand-info { display: flex; flex-direction: column; }
+.vcard-brand-name { font-size: 1.1rem; font-weight: 700; letter-spacing: 1.5px; line-height: 1.2; }
+.vcard-brand-sub { font-size: 0.7rem; color: rgba(255,255,255,0.5); letter-spacing: 0.5px; font-weight: 500; }
 
-/* ── Card top row ── */
-.vcard-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1.1rem;
-}
+.vcard-badges { display: flex; gap: 0.4rem; align-items: center; }
+.vcard-badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.22rem 0.65rem; border-radius: 50px; font-size: 0.72rem; font-weight: 700; animation: none; position: relative; overflow: hidden; }
+.vcard-badge.badge-new { background: linear-gradient(135deg, var(--gold), #f59e0b); color: #7c2d12; box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3); }
+.vcard-badge.badge-new::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent); animation: badgeShimmer 2.5s ease-in-out infinite; }
+@keyframes badgeShimmer { 0% { left: -100%; } 50%, 100% { left: 100%; } }
+.vcard-badge.badge-units { background: rgba(255, 255, 255, 0.1); color: var(--gold); border: 1px solid rgba(255, 215, 0, 0.2); backdrop-filter: blur(8px); }
+.vcard-badge i { font-size: 0.6rem; }
 
-.vcard-brand {
-    display: flex;
-    align-items: center;
-    gap: 0.65rem;
-}
+.vcard-code-block { background: linear-gradient(145deg, rgba(255,255,255,0.97), rgba(245,245,250,0.95)); border-radius: var(--radius-md); padding: 0; margin-bottom: 1rem; display: flex; align-items: stretch; direction: ltr; transition: var(--transition-normal); box-shadow: 0 4px 15px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,1); overflow: hidden; border: 1px solid rgba(0,0,0,0.04); }
+.vcard:hover .vcard-code-block { box-shadow: 0 8px 25px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,1); transform: translateZ(5px); }
+.vcard-code-main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 1rem 1.25rem; position: relative; }
+.vcard-code { font-family: 'Courier New', 'Lucida Console', monospace; font-size: 1.25rem; font-weight: 700; color: #1a1a2e; letter-spacing: 3px; user-select: all; text-align: center; position: relative; z-index: 1; }
+.vcard-code.masked { color: #bbb; letter-spacing: 5px; user-select: none; font-size: 1.1rem; }
+.vcard-code.masked::after { content: ''; position: absolute; inset: -4px -8px; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px); border-radius: 6px; pointer-events: none; }
 
-.vcard-logo {
-    width: 40px;
-    height: 40px;
-    border-radius: 11px;
-    object-fit: contain;
-    background: white;
-    padding: 5px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+.vcard-code-actions { display: flex; align-items: stretch; border-left: 1px solid rgba(0,0,0,0.06); }
+.vcard-copy-btn { background: linear-gradient(135deg, var(--main-red), var(--dark-red)); border: none; color: white; width: 52px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition-fast); flex-shrink: 0; font-size: 0.95rem; position: relative; overflow: hidden; }
+.vcard-copy-btn::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent); opacity: 0; transition: opacity 0.2s; }
+.vcard-copy-btn:hover::before { opacity: 1; }
+.vcard-copy-btn:hover { filter: brightness(1.15); }
+.vcard-copy-btn:active { transform: scale(0.95); }
+.vcard-copy-btn.copied { background: linear-gradient(135deg, #10b981, #059669); }
+.vcard-copy-btn.copied i { animation: copyBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes copyBounce { 0% { transform: scale(0.5); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
 
-.vcard:hover .vcard-logo {
-    transform: scale(1.06) translateZ(10px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.25);
-}
+.vcard-reveal-btn { background: linear-gradient(135deg, var(--gold), #f59e0b); border: none; color: #7c2d12; padding: 0.6rem 1.2rem; cursor: pointer; font-family: 'Tajawal', sans-serif; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 0.45rem; transition: var(--transition-fast); flex-shrink: 0; position: relative; overflow: hidden; }
+.vcard-reveal-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); animation: revealShimmer 3s ease-in-out infinite; }
+@keyframes revealShimmer { 0% { left: -100%; } 50%, 100% { left: 100%; } }
+.vcard-reveal-btn:hover { filter: brightness(1.1); }
+.vcard-reveal-btn:active { transform: scale(0.97); }
+.vcard-reveal-btn i { font-size: 0.8rem; }
 
-.vcard-brand-info {
-    display: flex;
-    flex-direction: column;
-}
+.vcard-meta { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.6rem; }
+.vcard-units { display: inline-flex; align-items: center; gap: 0.45rem; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 0.4rem 0.9rem; border-radius: 50px; font-size: 0.88rem; font-weight: 600; border: 1px solid rgba(255,255,255,0.1); transition: var(--transition-fast); }
+.vcard:hover .vcard-units { background: rgba(255, 255, 255, 0.14); border-color: rgba(255,255,255,0.18); }
+.vcard-units i { color: var(--gold); font-size: 0.75rem; }
+.vcard-units .units-value { color: var(--gold); font-weight: 800; }
 
-.vcard-brand-name {
-    font-size: 1.1rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    line-height: 1.2;
-}
+.vcard-timer { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; color: rgba(255, 255, 255, 0.8); font-weight: 600; font-variant-numeric: tabular-nums; padding: 0.35rem 0.75rem; border-radius: 50px; background: rgba(0, 0, 0, 0.15); border: 1px solid rgba(255,255,255,0.06); }
+.vcard-timer i { color: rgba(255, 255, 255, 0.5); font-size: 0.7rem; transition: color 0.3s; }
+.vcard-timer.expiring-soon { color: #fbbf24; border-color: rgba(251, 191, 36, 0.2); background: rgba(251, 191, 36, 0.1); }
+.vcard-timer.expiring-soon i { color: #fbbf24; animation: timerPulse 1s ease-in-out infinite; }
+.vcard-timer.expiring-critical { color: #f87171; border-color: rgba(248, 113, 113, 0.25); background: rgba(239, 68, 68, 0.12); animation: timerShake 0.5s ease-in-out infinite; }
+.vcard-timer.expiring-critical i { color: #f87171; }
+@keyframes timerShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-1px); } 75% { transform: translateX(1px); } }
 
-.vcard-brand-sub {
-    font-size: 0.7rem;
-    color: rgba(255,255,255,0.5);
-    letter-spacing: 0.5px;
-    font-weight: 500;
-}
+.vcard-progress-wrap { margin-top: 0.85rem; margin-bottom: 0.3rem; padding: 0 2px; }
+.vcard-progress-bar { width: 100%; height: 5px; background: rgba(255, 255, 255, 0.08); border-radius: 10px; overflow: hidden; position: relative; }
+.vcard-progress-fill { height: 100%; border-radius: 10px; transition: width 1s linear, background 2s ease; position: relative; overflow: hidden; }
+.vcard-progress-fill.progress-healthy { background: linear-gradient(90deg, #22c55e, #4ade80); }
+.vcard-progress-fill.progress-warning { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+.vcard-progress-fill.progress-danger { background: linear-gradient(90deg, #ef4444, #f87171); }
+.vcard-progress-fill.progress-healthy::after, .vcard-progress-fill.progress-warning::after, .vcard-progress-fill.progress-danger::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%); animation: progressShine 2s ease-in-out infinite; }
+@keyframes progressShine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 
-/* ── Badges ── */
-.vcard-badges {
-    display: flex;
-    gap: 0.4rem;
-    align-items: center;
-}
+.vcard-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 0.85rem; padding-top: 0.7rem; border-top: 1px solid rgba(255, 255, 255, 0.06); }
+.vcard-event { font-size: 0.78rem; color: rgba(255, 215, 0, 0.8); font-weight: 600; display: flex; align-items: center; gap: 0.35rem; }
+.vcard-event i { font-size: 0.7rem; }
+.vcard-site { font-size: 0.75rem; color: rgba(255, 255, 255, 0.35); direction: ltr; font-weight: 500; letter-spacing: 0.5px; }
 
-.vcard-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.22rem 0.65rem;
-    border-radius: 50px;
-    font-size: 0.72rem;
-    font-weight: 700;
-    animation: none;
-    position: relative;
-    overflow: hidden;
-}
-
-.vcard-badge.badge-new {
-    background: linear-gradient(135deg, var(--gold), #f59e0b);
-    color: #7c2d12;
-    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
-}
-
-.vcard-badge.badge-new::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
-    animation: badgeShimmer 2.5s ease-in-out infinite;
-}
-
-@keyframes badgeShimmer {
-    0% { left: -100%; }
-    50%, 100% { left: 100%; }
-}
-
-.vcard-badge.badge-units {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--gold);
-    border: 1px solid rgba(255, 215, 0, 0.2);
-    backdrop-filter: blur(8px);
-}
-
-.vcard-badge i {
-    font-size: 0.6rem;
-}
-
-/* ── Code block — Completely redesigned ── */
-.vcard-code-block {
-    background: linear-gradient(145deg, rgba(255,255,255,0.97), rgba(245,245,250,0.95));
-    border-radius: var(--radius-md);
-    padding: 0;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: stretch;
-    direction: ltr;
-    transition: var(--transition-normal);
-    box-shadow:
-        0 4px 15px rgba(0,0,0,0.08),
-        inset 0 1px 0 rgba(255,255,255,1);
-    overflow: hidden;
-    border: 1px solid rgba(0,0,0,0.04);
-}
-
-.vcard:hover .vcard-code-block {
-    box-shadow:
-        0 8px 25px rgba(0,0,0,0.12),
-        inset 0 1px 0 rgba(255,255,255,1);
-    transform: translateZ(5px);
-}
-
-.vcard-code-main {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem 1.25rem;
-    position: relative;
-}
-
-.vcard-code {
-    font-family: 'Courier New', 'Lucida Console', monospace;
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #1a1a2e;
-    letter-spacing: 3px;
-    user-select: all;
-    text-align: center;
-    position: relative;
-    z-index: 1;
-}
-
-.vcard-code.masked {
-    color: #bbb;
-    letter-spacing: 5px;
-    user-select: none;
-    font-size: 1.1rem;
-}
-
-/* Scanline effect on masked code */
-.vcard-code.masked::after {
-    content: '';
-    position: absolute;
-    inset: -4px -8px;
-    background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,0.02) 2px,
-        rgba(0,0,0,0.02) 4px
-    );
-    border-radius: 6px;
-    pointer-events: none;
-}
-
-/* ── Action buttons area ── */
-.vcard-code-actions {
-    display: flex;
-    align-items: stretch;
-    border-left: 1px solid rgba(0,0,0,0.06);
-}
-
-.vcard-copy-btn {
-    background: linear-gradient(135deg, var(--main-red), var(--dark-red));
-    border: none;
-    color: white;
-    width: 52px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: var(--transition-fast);
-    flex-shrink: 0;
-    font-size: 0.95rem;
-    position: relative;
-    overflow: hidden;
-}
-
-.vcard-copy-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
-    opacity: 0;
-    transition: opacity 0.2s;
-}
-
-.vcard-copy-btn:hover::before {
-    opacity: 1;
-}
-
-.vcard-copy-btn:hover {
-    filter: brightness(1.15);
-}
-
-.vcard-copy-btn:active {
-    transform: scale(0.95);
-}
-
-.vcard-copy-btn.copied {
-    background: linear-gradient(135deg, #10b981, #059669);
-}
-
-.vcard-copy-btn.copied i {
-    animation: copyBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes copyBounce {
-    0% { transform: scale(0.5); }
-    50% { transform: scale(1.3); }
-    100% { transform: scale(1); }
-}
-
-/* ── Reveal button redesigned ── */
-.vcard-reveal-btn {
-    background: linear-gradient(135deg, var(--gold), #f59e0b);
-    border: none;
-    color: #7c2d12;
-    padding: 0.6rem 1.2rem;
-    cursor: pointer;
-    font-family: 'Tajawal', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-    transition: var(--transition-fast);
-    flex-shrink: 0;
-    position: relative;
-    overflow: hidden;
-}
-
-.vcard-reveal-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    animation: revealShimmer 3s ease-in-out infinite;
-}
-
-@keyframes revealShimmer {
-    0% { left: -100%; }
-    50%, 100% { left: 100%; }
-}
-
-.vcard-reveal-btn:hover {
-    filter: brightness(1.1);
-}
-
-.vcard-reveal-btn:active {
-    transform: scale(0.97);
-}
-
-.vcard-reveal-btn i {
-    font-size: 0.8rem;
-}
-
-/* ── Meta row ── */
-.vcard-meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-}
-
-.vcard-units {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    padding: 0.4rem 0.9rem;
-    border-radius: 50px;
-    font-size: 0.88rem;
-    font-weight: 600;
-    border: 1px solid rgba(255,255,255,0.1);
-    transition: var(--transition-fast);
-}
-
-.vcard:hover .vcard-units {
-    background: rgba(255, 255, 255, 0.14);
-    border-color: rgba(255,255,255,0.18);
-}
-
-.vcard-units i {
-    color: var(--gold);
-    font-size: 0.75rem;
-}
-
-.vcard-units .units-value {
-    color: var(--gold);
-    font-weight: 800;
-}
-
-.vcard-timer {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.82rem;
-    color: rgba(255, 255, 255, 0.8);
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-    padding: 0.35rem 0.75rem;
-    border-radius: 50px;
-    background: rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(255,255,255,0.06);
-}
-
-.vcard-timer i {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 0.7rem;
-    transition: color 0.3s;
-}
-
-.vcard-timer.expiring-soon {
-    color: #fbbf24;
-    border-color: rgba(251, 191, 36, 0.2);
-    background: rgba(251, 191, 36, 0.1);
-}
-
-.vcard-timer.expiring-soon i {
-    color: #fbbf24;
-    animation: timerPulse 1s ease-in-out infinite;
-}
-
-.vcard-timer.expiring-critical {
-    color: #f87171;
-    border-color: rgba(248, 113, 113, 0.25);
-    background: rgba(239, 68, 68, 0.12);
-    animation: timerShake 0.5s ease-in-out infinite;
-}
-
-.vcard-timer.expiring-critical i {
-    color: #f87171;
-}
-
-@keyframes timerShake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-1px); }
-    75% { transform: translateX(1px); }
-}
-
-/* ── Progress bar redesigned ── */
-.vcard-progress-wrap {
-    margin-top: 0.85rem;
-    margin-bottom: 0.3rem;
-    padding: 0 2px;
-}
-
-.vcard-progress-bar {
-    width: 100%;
-    height: 5px;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
-}
-
-.vcard-progress-fill {
-    height: 100%;
-    border-radius: 10px;
-    transition: width 1s linear, background 2s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.vcard-progress-fill.progress-healthy {
-    background: linear-gradient(90deg, #22c55e, #4ade80);
-}
-
-.vcard-progress-fill.progress-warning {
-    background: linear-gradient(90deg, #f59e0b, #fbbf24);
-}
-
-.vcard-progress-fill.progress-danger {
-    background: linear-gradient(90deg, #ef4444, #f87171);
-}
-
-.vcard-progress-fill.progress-healthy::after,
-.vcard-progress-fill.progress-warning::after,
-.vcard-progress-fill.progress-danger::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%);
-    animation: progressShine 2s ease-in-out infinite;
-}
-
-@keyframes progressShine {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-}
-
-/* ── Card footer redesigned ── */
-.vcard-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 0.85rem;
-    padding-top: 0.7rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.vcard-event {
-    font-size: 0.78rem;
-    color: rgba(255, 215, 0, 0.8);
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-}
-
-.vcard-event i {
-    font-size: 0.7rem;
-}
-
-.vcard-site {
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.35);
-    direction: ltr;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-}
-
-/* ── Accessibility: reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
-    .vcard {
-        animation: none !important;
-        transition: box-shadow 0.2s, border-color 0.2s !important;
-        transform: none !important;
-    }
-
-    .vcard::before,
-    .vcard-shimmer::before {
-        display: none;
-    }
-
-    .vcard-badge.badge-new::after,
-    .vcard-reveal-btn::before,
-    .vcard-progress-fill::after {
-        animation: none !important;
-    }
-
-    .vcard:hover {
-        transform: translateY(-3px) !important;
-    }
+    .vcard { animation: none !important; transition: box-shadow 0.2s, border-color 0.2s !important; transform: none !important; }
+    .vcard::before, .vcard-shimmer::before { display: none; }
+    .vcard-badge.badge-new::after, .vcard-reveal-btn::before, .vcard-progress-fill::after { animation: none !important; }
+    .vcard:hover { transform: translateY(-3px) !important; }
 }
 
-/* ── Responsive adjustments ── */
 @media (max-width: 768px) {
-    .vcard-inner {
-        padding: 1.25rem;
-    }
-
-    .vcard-code {
-        font-size: 1.05rem;
-        letter-spacing: 2px;
-    }
-
-    .vcard-code.masked {
-        font-size: 0.95rem;
-        letter-spacing: 3px;
-    }
-
-    .vcard-copy-btn {
-        width: 46px;
-    }
-
-    .vcard-brand-sub {
-        display: none;
-    }
-
-    .vcard-meta {
-        gap: 0.5rem;
-    }
-
-    /* Disable 3D tilt on mobile (performance) */
-    .vcard {
-        transform: none !important;
-    }
-
-    .vcard:hover {
-        transform: translateY(-4px) !important;
-    }
-
-    .vcard:hover .vcard-code-block {
-        transform: none;
-    }
-
-    .vcard:hover .vcard-logo {
-        transform: scale(1.04);
-    }
+    .vcard-inner { padding: 1.25rem; }
+    .vcard-code { font-size: 1.05rem; letter-spacing: 2px; }
+    .vcard-code.masked { font-size: 0.95rem; letter-spacing: 3px; }
+    .vcard-copy-btn { width: 46px; }
+    .vcard-brand-sub { display: none; }
+    .vcard-meta { gap: 0.5rem; }
+    .vcard { transform: none !important; }
+    .vcard:hover { transform: translateY(-4px) !important; }
+    .vcard:hover .vcard-code-block { transform: none; }
+    .vcard:hover .vcard-logo { transform: scale(1.04); }
 }
 
 @media (min-width: 1024px) {
-    .vcard-inner {
-        padding: 1.75rem;
-    }
-
-    .vcard-code {
-        font-size: 1.4rem;
-        letter-spacing: 4px;
-    }
-
-    .vcard-code.masked {
-        letter-spacing: 6px;
-        font-size: 1.2rem;
-    }
-
-    .vcard-copy-btn {
-        width: 56px;
-        font-size: 1rem;
-    }
+    .vcard-inner { padding: 1.75rem; }
+    .vcard-code { font-size: 1.4rem; letter-spacing: 4px; }
+    .vcard-code.masked { letter-spacing: 6px; font-size: 1.2rem; }
+    .vcard-copy-btn { width: 56px; font-size: 1rem; }
 }
 </style>
 </head>
@@ -2266,26 +1340,25 @@
             <span class="nav-title">Vodafone Cards</span>
         </div>
         <div class="nav-stats">
-            <!-- ═══ COIN BADGE (NEW) ═══ -->
-            <div class="stat-chip coin-chip" style="cursor: pointer;" onclick="window.location.href='point.html'" title="رصيد النقاط">
-                <i class="fas fa-coins" style="color: var(--gold); font-size: 1.1rem;"></i>
-                <span style="font-weight: 600;">النقاط:</span>
-                <span class="stat-value" id="userCoinsDisplay" style="color: var(--gold); font-size: 1.1rem; font-weight: 900;">0</span>
-            </div>
-
-            <!-- ═══ HIDDEN ON MOBILE TO SAVE SPACE ═══ -->
-            <div class="stat-chip hide-on-mobile">
+            <div class="stat-chip">
                 <i class="fas fa-credit-card"></i>
                 <span>الكروت:</span>
                 <span class="stat-value" id="cardCount">0</span>
             </div>
-            <div class="stat-chip hide-on-mobile">
+            <div class="stat-chip">
                 <i class="fas fa-users"></i>
                 <span>المساهمين:</span>
                 <span class="stat-value" id="contributorsCount">0</span>
             </div>
             
-            <!-- ═══ AUTH BUTTON ═══ -->
+            <!-- ═══ COINS BADGE ═══ -->
+            <div class="coins-badge" id="coinsBadge" title="رصيد العملات">
+                <img src="https://www.raed.net/img?id=1236841" alt="coins" class="coins-badge-icon" loading="eager" decoding="async">
+                <span class="coins-badge-amount" id="coinsAmount">0</span>
+                <span class="coins-badge-label">Coins</span>
+            </div>
+
+            <!-- ═══ AUTH BUTTON (new) ═══ -->
             <button class="nav-auth-btn" id="navAuthBtn">
                 <i class="fas fa-user-circle"></i>
                 <span>تسجيل الدخول</span>
@@ -2385,8 +1458,9 @@
             </div>
 
             <div class="incentive-banner">
-                <i class="fas fa-gift"></i>
-                <p>شارك كروتك الآن وادخل السحب الأسبوعي للفوز بشحنة مجانية! كلما شاركت أكثر، زادت فرصك بالفوز.</p>
+                <i class="fas fa-coins" style="font-size: 1.4rem; margin-bottom: 0.5rem; display: block;"></i>
+                <p style="font-size: 0.95rem; font-weight: 600;">شارك كروتك الآن واحصل على عملات ذهبية تلقائياً بمجرد موافقة الإدارة!</p>
+                <p style="font-size: 0.75rem; opacity: 0.9; margin-top: 0.3rem;">(50 وحدة = 5 عملات | 100 وحدة = 12 عملة | 200 وحدة = 25 عملة)</p>
             </div>
 
             <div class="form-field">
@@ -2430,7 +1504,7 @@
         </div>
     </div>
 
-    <!-- ░░░ Login Modal (new) ░░░ -->
+    <!-- ░░░ Login Modal ░░░ -->
     <div class="modal-backdrop" id="loginModalBackdrop">
         <div class="modal-panel" role="dialog" aria-labelledby="loginModalTitle">
             <button class="modal-close" id="loginModalClose" aria-label="إغلاق">
@@ -2511,8 +1585,8 @@
     let searchQuery = '';
     let skeletonsRemoved = false;
     let currentUser = null;
+    let coinsUnsubscribe = null; 
 
-    // Rate limiting: track submission timestamps per session
     const submissionTimestamps =[];
 
     /* ═══════════════════════════════════════
@@ -2539,6 +1613,10 @@
     const loginModalBackdrop = $('#loginModalBackdrop');
     const loginModalClose = $('#loginModalClose');
     const googleLoginBtn = $('#googleLoginBtn');
+    
+    // Coins refs
+    const coinsBadge = $('#coinsBadge');
+    const coinsAmountEl = $('#coinsAmount');
 
     /* ═══════════════════════════════════════
        §4. STARS GENERATOR
@@ -2590,44 +1668,9 @@
     }
 
     /* ═══════════════════════════════════════
-       § COIN SYSTEM (Real-time synchronization)
-    ═══════════════════════════════════════ */
-    let coinsUnsubscribe = null;
-
-    function updateCoinsDisplay(user) {
-        const coinDisplay = $('#userCoinsDisplay');
-        if (!coinDisplay) return;
-
-        // If no user is logged in, reset UI and remove listener
-        if (!user) {
-            if (coinsUnsubscribe) {
-                coinsUnsubscribe();
-                coinsUnsubscribe = null;
-            }
-            coinDisplay.textContent = '0';
-            return;
-        }
-
-        // Set up real-time listener on the user's document
-        const userRef = doc(db, 'users', user.uid);
-        coinsUnsubscribe = onSnapshot(userRef, (docSnap) => {
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                // Update with live Firestore coin data
-                coinDisplay.textContent = data.coins || 0;
-            } else {
-                coinDisplay.textContent = '0';
-            }
-        }, (error) => {
-            console.error("Error fetching live coins:", error);
-        });
-    }
-
-    /* ═══════════════════════════════════════
        §6. AUTHENTICATION
     ═══════════════════════════════════════ */
 
-    // --- Login Modal ---
     function openLoginModal() {
         loginModalBackdrop.classList.add('open');
         document.body.style.overflow = 'hidden';
@@ -2635,7 +1678,6 @@
 
     function closeLoginModal() {
         loginModalBackdrop.classList.remove('open');
-        // Only restore scroll if the card submission modal is also closed
         if (!modalBackdrop.classList.contains('open')) {
             document.body.style.overflow = '';
         }
@@ -2646,7 +1688,6 @@
         if (e.target === loginModalBackdrop) closeLoginModal();
     });
 
-    // --- Google Sign-In ---
     async function signInWithGoogle() {
         try {
             googleLoginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري تسجيل الدخول...';
@@ -2655,7 +1696,6 @@
             const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
 
-            // Prepare user document in Firestore (coin system)
             await ensureUserDocument(user);
 
             showToast(`مرحباً ${user.displayName || 'بك'}!`, 'success');
@@ -2676,7 +1716,6 @@
 
     googleLoginBtn.addEventListener('click', signInWithGoogle);
 
-    // --- Coin system: ensure user doc exists ---
     async function ensureUserDocument(user) {
         try {
             const userRef = doc(db, 'users', user.uid);
@@ -2695,7 +1734,6 @@
         }
     }
 
-    // --- Nav auth button ---
     function updateAuthUI(user) {
         if (user) {
             if (user.photoURL) {
@@ -2719,7 +1757,6 @@
 
     navAuthBtn.addEventListener('click', async () => {
         if (currentUser) {
-            // Sign out
             try {
                 await signOut(auth);
                 showToast('تم تسجيل الخروج', 'info');
@@ -2731,19 +1768,68 @@
         }
     });
 
-    // --- Auth state listener ---
-    onAuthStateChanged(auth, async (user) => {
-        currentUser = user;
-        updateAuthUI(user);
-
-        if (user) {
-            await ensureUserDocument(user);
+    /* ═══════════════════════════════════════
+       §6b. COINS DISPLAY SYSTEM
+       With Celebration/Reward Toast Alert
+    ═══════════════════════════════════════ */
+    function updateCoinsDisplay(user) {
+        if (coinsUnsubscribe) {
+            coinsUnsubscribe();
+            coinsUnsubscribe = null;
         }
 
-        // Trigger Live Coin Subscription
+        if (!user) {
+            coinsAmountEl.textContent = '0';
+            return;
+        }
+
+        const userDocRef = doc(db, 'users', user.uid);
+        let isFirstLoad = true; // Prevents showing toast on first page load
+
+        coinsUnsubscribe = onSnapshot(userDocRef, (docSnap) => {
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                const coins = data.coins !== undefined ? data.coins : 0;
+                
+                const oldCoinsNum = Number(coinsAmountEl.textContent) || 0;
+
+                // If coins increased while the user is actively on the site
+                if (!isFirstLoad && coins > oldCoinsNum) {
+                    const earned = coins - oldCoinsNum;
+                    // Trigger Celebratory Toast!
+                    showToast(`مبروك! تم اعتماد كارتك وحصلت على ${earned} عملة 🪙`, 'success');
+                    
+                    coinsBadge.classList.remove('updated');
+                    void coinsBadge.offsetWidth;
+                    coinsBadge.classList.add('updated');
+                } else if (!isFirstLoad && coins !== oldCoinsNum) {
+                    // Just animate if it decreased/changed
+                    coinsBadge.classList.remove('updated');
+                    void coinsBadge.offsetWidth;
+                    coinsBadge.classList.add('updated');
+                }
+
+                coinsAmountEl.textContent = coins;
+                isFirstLoad = false;
+            } else {
+                coinsAmountEl.textContent = '0';
+                isFirstLoad = false;
+            }
+        }, (error) => {
+            console.error('Error listening to user coins:', error);
+            coinsAmountEl.textContent = '0';
+        });
+    }
+
+    onAuthStateChanged(auth, (user) => {
+        currentUser = user;
+        updateAuthUI(user);
         updateCoinsDisplay(user);
 
-        // Re-render cards to update reveal buttons
+        if (user) {
+            ensureUserDocument(user);
+        }
+
         if (allCards.length > 0) {
             renderCards();
         }
@@ -2753,7 +1839,6 @@
        §7. CARD SUBMISSION MODAL LOGIC
     ═══════════════════════════════════════ */
     function openModal() {
-        // Require login to submit
         if (!currentUser) {
             openLoginModal();
             return;
@@ -2825,7 +1910,6 @@
        §9. SECURITY CHECKS
     ═══════════════════════════════════════ */
 
-    // 9a. Duplicate card protection
     async function isCodeUnique(code) {
         try {
             const q = query(collection(db, 'cards'), where('code', '==', code));
@@ -2837,18 +1921,16 @@
         }
     }
 
-    // 9b. Rate limiting — max 3 submissions per minute
     function checkRateLimit() {
         const now = Date.now();
         const oneMinuteAgo = now - 60000;
 
-        // Clean up old timestamps
         while (submissionTimestamps.length > 0 && submissionTimestamps[0] < oneMinuteAgo) {
             submissionTimestamps.shift();
         }
 
         if (submissionTimestamps.length >= 3) {
-            return false; // Rate limited
+            return false; 
         }
         return true;
     }
@@ -2857,13 +1939,11 @@
         submissionTimestamps.push(Date.now());
     }
 
-    // 9c. Input validation (used in submit handler)
     function validateCardInput(code, units) {
         if (!code || !units) {
             return { valid: false, message: 'الرجاء ملء جميع الحقول', field: 'both' };
         }
 
-        // Only digits
         if (!/^\d+$/.test(code)) {
             return { valid: false, message: 'الكود يجب أن يحتوي على أرقام فقط', field: 'code' };
         }
@@ -2885,13 +1965,13 @@
     ═══════════════════════════════════════ */
     async function createCard(code, units) {
         try {
-            // Check for duplicate
             const isUnique = await isCodeUnique(code);
             if (!isUnique) {
                 showToast('هذا الكارت تم نشره من قبل', 'warning');
                 return false;
             }
 
+            // Ensures `addedBy` connects seamlessly with the Admin panel's coin rewards!
             await addDoc(collection(db, 'cards'), {
                 code: code,
                 units: parseInt(units),
@@ -2899,12 +1979,12 @@
                 status: "pending",
                 createdAt: serverTimestamp(),
                 expiresAt: Timestamp.fromDate(new Date(Date.now() + 6 * 60 * 60 * 1000)),
-                addedBy: currentUser.uid
+                addedBy: currentUser.uid 
             });
 
             logEvent(analytics, 'card_created');
             recordSubmission();
-            showToast('تم إرسال الكارت للمراجعة! سيظهر بعد الموافقة عليه.', 'success');
+            showToast('تم إرسال الكارت للمراجعة! سيظهر بعد الموافقة عليه وتُضاف لك العملات.', 'success');
             return true;
         } catch (error) {
             console.error("Error adding document: ", error);
@@ -2914,7 +1994,6 @@
     }
 
     submitCardBtn.addEventListener('click', async () => {
-        // 9d. Require login
         if (!currentUser) {
             closeModal();
             openLoginModal();
@@ -2924,7 +2003,6 @@
         const code = codeInput.value.trim();
         const units = unitsInput.value.trim();
 
-        // Validate input
         const validation = validateCardInput(code, units);
         if (!validation.valid) {
             showToast(validation.message, 'error');
@@ -2933,13 +2011,11 @@
             return;
         }
 
-        // Rate limit check
         if (!checkRateLimit()) {
             showToast('أنت ترسل كروت بسرعة كبيرة. انتظر دقيقة ثم حاول مرة أخرى.', 'warning');
             return;
         }
 
-        // Disable & show loading
         submitCardBtn.disabled = true;
         submitCardBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري النشر...';
 
@@ -2961,7 +2037,6 @@
             return;
         }
 
-        // User is logged in — reveal the code
         const codeSpan = cardEl.querySelector('.vcard-code');
         const revealBtn = cardEl.querySelector('.vcard-reveal-btn');
         const copyBtn = cardEl.querySelector('.vcard-copy-btn');
@@ -2970,14 +2045,11 @@
         codeSpan.classList.remove('masked');
         codeSpan.style.userSelect = 'all';
 
-        // Remove reveal button
         if (revealBtn) revealBtn.remove();
 
-        // Enable copy button
         copyBtn.style.display = 'flex';
         copyBtn.disabled = false;
 
-        // Log event
         logEvent(analytics, 'code_revealed');
     }
 
@@ -2995,7 +2067,6 @@
                 btnEl.innerHTML = '<i class="fas fa-copy"></i>';
             }, 2000);
         }).catch(() => {
-            // Fallback
             const textarea = document.createElement('textarea');
             textarea.value = code;
             document.body.appendChild(textarea);
@@ -3021,7 +2092,6 @@
     }
 
     function maskCode(code) {
-        // Example: **** **** **** *
         return code.replace(/./g, '*').match(/.{1,4}/g).join(' ');
     }
 
@@ -3050,17 +2120,14 @@
         const isExpiringSoon = remaining < 30 * 60 * 1000;
         const isExpiringCritical = remaining < 10 * 60 * 1000 && remaining > 0;
 
-        // Progress color class
         let progressClass = 'progress-healthy';
         if (progressPercent < 15) progressClass = 'progress-danger';
         else if (progressPercent < 40) progressClass = 'progress-warning';
 
-        // Timer class
         let timerClass = '';
         if (isExpiringCritical) timerClass = 'expiring-critical';
         else if (isExpiringSoon) timerClass = 'expiring-soon';
 
-        // Wrapper with perspective
         const wrapper = document.createElement('div');
         wrapper.className = 'vcard-perspective';
 
@@ -3152,7 +2219,6 @@
             </div>
         `;
 
-        // ── Event handlers ──
         const copyBtn = card.querySelector('.vcard-copy-btn');
         copyBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -3171,7 +2237,6 @@
             });
         }
 
-        // ── 3D Tilt Engine (desktop only) ──
         if (window.matchMedia('(min-width: 769px)').matches) {
             card.addEventListener('pointerenter', () => {
                 card.style.setProperty('--glow-opacity', '1');
@@ -3184,13 +2249,12 @@
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
 
-                const ratioX = (x - centerX) / centerX;  // -1 to 1
-                const ratioY = (y - centerY) / centerY;  // -1 to 1
+                const ratioX = (x - centerX) / centerX; 
+                const ratioY = (y - centerY) / centerY; 
 
                 card.style.setProperty('--ratio-x', ratioX.toFixed(3));
                 card.style.setProperty('--ratio-y', ratioY.toFixed(3));
 
-                // Dynamic holo angle based on pointer position
                 const angle = Math.atan2(y - centerY, x - centerX) * (180 / Math.PI) + 180;
                 card.style.setProperty('--holo-angle', `${angle.toFixed(1)}deg`);
             });
@@ -3203,7 +2267,6 @@
             });
         }
 
-        // ── Auto-remove "new" badge ──
         if (isNew) {
             const badge = card.querySelector('.badge-new');
             const remainingNew = (15 * 60 * 1000) - elapsed;
@@ -3222,10 +2285,9 @@
     }
 
     /* ═══════════════════════════════════════
-       §15. RENDER ALL CARDS (with filter/search)
+       §15. RENDER ALL CARDS
     ═══════════════════════════════════════ */
     function renderCards() {
-        // Remove skeletons
         if (!skeletonsRemoved) {
             $$('.skeleton-card').forEach(s => s.remove());
             skeletonsRemoved = true;
@@ -3236,7 +2298,6 @@
         let filtered = [...allCards];
         const now = Date.now();
 
-        // Search
         if (searchQuery) {
             filtered = filtered.filter(c =>
                 c.code.includes(searchQuery) ||
@@ -3244,7 +2305,6 @@
             );
         }
 
-        // Filter
         switch (activeFilter) {
             case 'new':
                 filtered = filtered.filter(c =>
@@ -3263,10 +2323,8 @@
                 filtered.sort((a, b) => b.createdAt.toDate().getTime() - a.createdAt.toDate().getTime());
         }
 
-        // Update count
         cardCountEl.textContent = allCards.length;
 
-        // Count unique contributors by addedBy field
         const uniqueContributors = new Set(allCards.map(c => c.addedBy).filter(Boolean));
         contributorsCountEl.textContent = uniqueContributors.size;
 
@@ -3309,7 +2367,6 @@
             allCards =[];
             snapshot.forEach((docSnap) => {
                 const data = docSnap.data();
-                // Only include cards that have a createdAt and haven't expired
                 if (data.createdAt && data.expiresAt && data.expiresAt.toDate().getTime() > now) {
                     allCards.push({ id: docSnap.id, ...data });
                 }
@@ -3318,7 +2375,6 @@
         }, (error) => {
             console.error("Firestore error:", error);
 
-            // ── FALLBACK ──
             console.warn("Attempting fallback query...");
             const fallbackQuery = query(
                 collection(db, 'cards'),
@@ -3344,7 +2400,6 @@
                 console.error("Fallback query also failed:", fallbackError);
                 showToast('خطأ في تحميل الكروت', 'error');
 
-                // Remove skeletons even on error
                 if (!skeletonsRemoved) {
                     $$('.skeleton-card').forEach(s => s.remove());
                     skeletonsRemoved = true;
@@ -3367,10 +2422,8 @@
                 const seconds = Math.floor(remaining / 1000);
                 const progressPercent = Math.max(0, (remaining / totalDuration) * 100);
 
-                // Update timer text
                 timerEl.querySelector('.timer-text').textContent = formatTime(seconds);
 
-                // Update timer urgency classes
                 timerEl.classList.remove('expiring-soon', 'expiring-critical');
                 if (remaining > 0 && remaining < 10 * 60 * 1000) {
                     timerEl.classList.add('expiring-critical');
@@ -3378,14 +2431,12 @@
                     timerEl.classList.add('expiring-soon');
                 }
 
-                // Update progress bar
                 const card = timerEl.closest('.vcard');
                 if (card) {
                     const fill = card.querySelector('.vcard-progress-fill');
                     if (fill) {
                         fill.style.width = `${progressPercent}%`;
 
-                        // Update progress color class
                         fill.classList.remove('progress-healthy', 'progress-warning', 'progress-danger');
                         if (progressPercent < 15) fill.classList.add('progress-danger');
                         else if (progressPercent < 40) fill.classList.add('progress-warning');
@@ -3393,7 +2444,6 @@
                     }
                 }
 
-                // Auto-remove expired card
                 if (seconds <= 0) {
                     const wrapper = card ? card.closest('.vcard-perspective') : null;
                     const target = wrapper || card;
